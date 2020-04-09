@@ -7,6 +7,8 @@ import protocol.request.LogoutRequestPacket;
 import protocol.response.LogoutResponsePacket;
 import util.SessionUtil;
 
+import java.util.List;
+
 /**
  * @author jmx
  * @date 2020/3/10 8:13 PM
@@ -22,6 +24,11 @@ public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequ
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LogoutRequestPacket logoutRequestPacket) {
+        String userId = SessionUtil.getSession(ctx.channel()).getUserId();
+        List<String> groupIds = SessionUtil.getGroupIds(userId);
+        for (String groupId: groupIds) {
+            SessionUtil.getChannelGroup(groupId).remove(ctx.channel());
+        }
         SessionUtil.unBindSession(ctx.channel());
         LogoutResponsePacket logoutResponsePacket = new LogoutResponsePacket();
         logoutResponsePacket.setSuccess(true);

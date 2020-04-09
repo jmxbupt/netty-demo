@@ -43,6 +43,9 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
             return;
         }
 
+        String userId = SessionUtil.getSession(ctx.channel()).getUserId();
+        SessionUtil.getGroupIds(userId).remove(groupId);
+
         quitGroupResponsePacket.setSuccess(true);
         quitGroupResponsePacket.setGroupId(groupId);
         // 在客户端显示消息的时候区分退出成员和其他成员

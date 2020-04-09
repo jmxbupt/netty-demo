@@ -36,6 +36,7 @@ public class GroupMessageRequestHandler extends SimpleChannelInboundHandler<Grou
             return;
         }
 
+        // 下面这种情况在UI界面是不会发生的
         if (!channelGroup.contains(SessionUtil.getChannel(SessionUtil.getSession(ctx.channel()).getUserId()))) {
             groupMessageResponsePacket.setSuccess(false);
             groupMessageResponsePacket.setReason("您不在群[" + groupId + "]中");

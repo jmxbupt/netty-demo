@@ -62,6 +62,10 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
 
             // 保存群相关的信息
             SessionUtil.bindChannelGroup(createGroupResponsePacket.getGroupId(), channelGroup);
+            for (Session session: sessionList) {
+                String userId = session.getUserId();
+                SessionUtil.getGroupIds(userId).add(createGroupResponsePacket.getGroupId());
+            }
 
         } else {
             createGroupResponsePacket.setSuccess(false);

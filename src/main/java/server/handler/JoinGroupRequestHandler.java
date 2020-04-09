@@ -36,6 +36,11 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
             return;
         }
 
+        // 没有管重复加群的情况
+
+        String userId = SessionUtil.getSession(ctx.channel()).getUserId();
+        SessionUtil.getGroupIds(userId).add(groupId);
+
         channelGroup.add(ctx.channel());
         joinGroupResponsePacket.setSuccess(true);
         joinGroupResponsePacket.setSession(SessionUtil.getSession(ctx.channel()));
