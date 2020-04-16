@@ -7,12 +7,11 @@ import protocol.request.LoginRequestPacket;
 import protocol.response.LoginResponsePacket;
 import session.Session;
 import util.IDUtil;
+import util.JDBCUtil;
 import util.SessionUtil;
 
+import java.sql.*;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author jmx
@@ -38,13 +37,11 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         LoginResponsePacket loginResponsePacket = new LoginResponsePacket();
         loginResponsePacket.setUserName(loginRequestPacket.getUserName());
 
-        if (valid(loginRequestPacket)) {
+        if (valid(loginRequestPacket, loginResponsePacket)) {
             // 校验成功
             loginResponsePacket.setSuccess(true);
-            String userId = IDUtil.random();
-            loginResponsePacket.setUserId(userId);
             System.out.println("[" + loginRequestPacket.getUserName() +  "]登录成功！");
-            SessionUtil.bindSession(new Session(userId, loginRequestPacket.getUserName()), ctx.channel());
+            SessionUtil.bindSession(new Session(loginResponsePacket.getUserId(), loginRequestPacket.getUserName()), ctx.channel());
         } else {
             // 校验失败
             loginResponsePacket.setSuccess(false);
@@ -55,8 +52,26 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         ctx.writeAndFlush(loginResponsePacket);
     }
 
-    private boolean valid(LoginRequestPacket loginRequestPacket) {
-        return true;
+    private boolean valid(LoginRequestPacket loginRequestPacket, LoginResponsePacket loginResponsePacket) {
+
+        String name = loginRequestPacket.getUserName();
+        String pwd = loginRequestPacket.getPassword();
+        try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
+            System.out.println("成功建立JDBC连接...");
+            try (Statement stmt = conn.createStatement()) {
+                System.out.println("SELECT id FROM users WHERE name = '" + name + "' AND pwd = '" + pwd + "'");
+                try (ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE name = '" + name + "' AND pwd = '" + pwd + "'" )) {
+                    if (rs.next()) {
+                        System.out.println("查询成功！");
+                        loginResponsePacket.setUserId(rs.getInt(1) + "");
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
