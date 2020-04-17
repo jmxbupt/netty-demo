@@ -56,13 +56,12 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         String name = loginRequestPacket.getUserName();
         String pwd = loginRequestPacket.getPassword();
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
-            System.out.println("成功建立JDBC连接...");
-            try (Statement stmt = conn.createStatement()) {
-                System.out.println("SELECT id FROM users WHERE name = '" + name + "' AND pwd = '" + pwd + "'");
-                try (ResultSet rs = stmt.executeQuery("SELECT id FROM users WHERE name = '" + name + "' AND pwd = '" + pwd + "'" )) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM users WHERE name = ? AND pwd = ?")) {
+                ps.setObject(1, name);
+                ps.setObject(2, pwd);
+                try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        System.out.println("查询成功！");
-                        loginResponsePacket.setUserId(rs.getInt(1) + "");
+                        loginResponsePacket.setUserId(rs.getLong("id") + "");
                         return true;
                     }
                 }
