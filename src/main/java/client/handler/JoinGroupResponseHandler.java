@@ -1,10 +1,10 @@
 package client.handler;
 
+import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.JoinGroupResponsePacket;
 import session.Session;
-import util.SessionUtil;
 
 /**
  * @author jmx
@@ -19,7 +19,7 @@ public class JoinGroupResponseHandler extends SimpleChannelInboundHandler<JoinGr
             System.out.println(joinGroupResponsePacket.getReason());
         } else {
             Session session = joinGroupResponsePacket.getSession();
-            if (SessionUtil.getSession(ctx.channel()).getUserId().equals(session.getUserId())) {
+            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
                 System.out.println("您已加入群[" + joinGroupResponsePacket.getGroupId() + "]");
             } else {
                 System.out.println(session.getUserId() + ":" + session.getUserName()

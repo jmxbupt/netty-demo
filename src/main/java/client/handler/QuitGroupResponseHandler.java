@@ -1,10 +1,10 @@
 package client.handler;
 
+import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.QuitGroupResponsePacket;
 import session.Session;
-import util.SessionUtil;
 
 /**
  * @author jmx
@@ -18,7 +18,7 @@ public class QuitGroupResponseHandler extends SimpleChannelInboundHandler<QuitGr
             System.out.println(quitGroupResponsePacket.getReason());
         } else {
             Session session = quitGroupResponsePacket.getSession();
-            if (SessionUtil.getSession(ctx.channel()).getUserId().equals(session.getUserId())) {
+            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
                 System.out.println("您已退出群[" + quitGroupResponsePacket.getGroupId() + "]");
             } else {
                 System.out.println(session.getUserId() + ":" + session.getUserName()

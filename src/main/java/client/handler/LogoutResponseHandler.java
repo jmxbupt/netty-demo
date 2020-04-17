@@ -15,6 +15,7 @@ public class LogoutResponseHandler extends SimpleChannelInboundHandler<LogoutRes
         if (logoutResponsePacket.isSuccess()) {
             System.out.println("您已退出登录！");
             ConsoleCommandManager.hasLogin = false;
+            ConsoleCommandManager.userId = null;
         } else {
             System.out.println("你当前无法退出登录！");
         }

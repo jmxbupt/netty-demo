@@ -1,10 +1,10 @@
 package client.handler;
 
+import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.GroupMessageResponsePacket;
 import session.Session;
-import util.SessionUtil;
 
 /**
  * @author jmx
@@ -18,7 +18,7 @@ public class GroupMessageResponseHandler extends SimpleChannelInboundHandler<Gro
             System.out.println(groupMessageResponsePacket.getReason());
         } else {
             Session session = groupMessageResponsePacket.getFromUser();
-            if (SessionUtil.getSession(ctx.channel()).getUserId().equals(session.getUserId())) {
+            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
                 System.out.println("群消息发送成功！");
             } else {
                 System.out.println("收到群[" + groupMessageResponsePacket.getFromGroupId() + "]中["

@@ -20,6 +20,7 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
             String userId = loginResponsePacket.getUserId();
             System.out.println("[" + userName + "]登录成功，userId 为: " + userId);
             ConsoleCommandManager.hasLogin = true;
+            ConsoleCommandManager.userId = userId;
         } else {
             System.out.println("[" + userName + "]登录失败，原因：" + loginResponsePacket.getReason());
         }

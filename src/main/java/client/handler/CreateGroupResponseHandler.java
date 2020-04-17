@@ -1,10 +1,10 @@
 package client.handler;
 
+import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.CreateGroupResponsePacket;
 import session.Session;
-import util.SessionUtil;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<Crea
         } else {
             Session session = createGroupResponsePacket.getSession();
             List<Session> sessionList = createGroupResponsePacket.getSessionList();
-            if (SessionUtil.getSession(ctx.channel()).getUserId().equals(session.getUserId())) {
+            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
                 System.out.print("群[" + createGroupResponsePacket.getGroupId() + "]创建成功，");
             } else {
                 System.out.print(session.getUserId() + ":" +  session.getUserName()

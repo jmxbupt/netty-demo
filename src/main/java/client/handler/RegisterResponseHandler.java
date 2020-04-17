@@ -20,6 +20,7 @@ public class RegisterResponseHandler extends SimpleChannelInboundHandler<Registe
             String userId = registerResponsePacket.getUserId();
             System.out.println("[" + userName + "]已成功注册并登录，userId 为: " + userId);
             ConsoleCommandManager.hasLogin = true;
+            ConsoleCommandManager.userId = userId;
         } else {
             System.out.println("[" + userName + "]注册失败，原因：" + registerResponsePacket.getReason());
         }

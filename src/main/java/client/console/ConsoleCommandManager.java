@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class ConsoleCommandManager implements ConsoleCommand {
 
     public static boolean hasLogin = false;
+    public static String userId;
 
     private Map<String, ConsoleCommand> consoleCommandMap;
 
@@ -51,7 +52,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
                 "listGroupMembers【获取群成员列表】\n" +
                 "joinGroup【加入群】\n" +
                 "quitGroup【退出群】\n" +
-                "sentToGroup【群聊】\n" +
+                "sendToGroup【群聊】\n" +
                 "logout【退出登录】\n" +
                 "----------\n");
         String command = scanner.next();
@@ -63,6 +64,11 @@ public class ConsoleCommandManager implements ConsoleCommand {
 
         if (consoleCommand != null) {
             consoleCommand.exec(scanner, channel);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+                // 忽略
+            }
         } else {
             System.out.println("无法识别[" + command + "]指令，请重新输入！");
         }

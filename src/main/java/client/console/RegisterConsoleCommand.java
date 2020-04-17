@@ -1,7 +1,6 @@
 package client.console;
 
 import io.netty.channel.Channel;
-import protocol.request.LoginRequestPacket;
 import protocol.request.RegisterRequestPacket;
 
 import java.util.Scanner;
@@ -22,7 +21,7 @@ public class RegisterConsoleCommand implements ConsoleCommand {
         registerRequestPacket.setPassword(scanner.next());
 
         channel.writeAndFlush(registerRequestPacket);
-        // 等待登录回复
+        // 等待注册回复
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ignored) {
