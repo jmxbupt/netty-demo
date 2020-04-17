@@ -6,7 +6,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.LoginRequestPacket;
 import protocol.response.LoginResponsePacket;
 import session.Session;
-import util.IDUtil;
 import util.JDBCUtil;
 import util.SessionUtil;
 
