@@ -15,11 +15,11 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket loginResponsePacket) {
 
-        String userId = loginResponsePacket.getUserId();
         String userName = loginResponsePacket.getUserName();
 
         if (loginResponsePacket.isSuccess()) {
-            System.out.println("[" + userName + "]登录成功，userId 为: " + loginResponsePacket.getUserId());
+            String userId = loginResponsePacket.getUserId();
+            System.out.println("[" + userName + "]登录成功，userId 为: " + userId);
             ClientSessionUtil.bindSession(new Session(userId, userName), ctx.channel());
         } else {
             System.out.println("[" + userName + "]登录失败，原因：" + loginResponsePacket.getReason());

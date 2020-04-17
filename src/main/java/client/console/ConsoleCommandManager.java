@@ -25,6 +25,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
         consoleCommandMap.put("joinGroup", new JoinGroupConsoleCommand());
         consoleCommandMap.put("quitGroup", new QuitGroupConsoleCommand());
         consoleCommandMap.put("sendToGroup", new SendToGroupConsoleCommand());
+        consoleCommandMap.put("register", new RegisterConsoleCommand());
     }
 
 
@@ -32,15 +33,20 @@ public class ConsoleCommandManager implements ConsoleCommand {
     public void exec(Scanner scanner, Channel channel) {
 
         if (!ClientSessionUtil.hasLogin(channel)) {
-            System.out.print("请输入login登录: ");
+            System.out.print("请输入register注册或login登录: ");
             String command = scanner.next();
-            if (!command.equals("login")) {
+            if (!command.equals("register") && !command.equals("login")) {
                 return;
             }
             consoleCommandMap.get(command).exec(scanner, channel);
         }
         System.out.print("请输入命令：");
         String command = scanner.next();
+        while (command.equals("register") || command.equals("login")) {
+            System.out.println("您已登录，如需注册或者重新登录，请先输入logout退出!");
+            System.out.print("请输入命令：");
+            command = scanner.next();
+        }
         ConsoleCommand consoleCommand = consoleCommandMap.get(command);
 
         if (consoleCommand != null) {

@@ -53,6 +53,8 @@ public class NettyClient {
                         ch.pipeline().addLast(new Spliter());
                         // 解码器
                         ch.pipeline().addLast(new PacketDecoder());
+                        // 注册响应处理器
+                        ch.pipeline().addLast(new RegisterResponseHandler());
                         // 登录响应处理器
                         ch.pipeline().addLast(new LoginResponseHandler());
                         // 单聊响应处理器

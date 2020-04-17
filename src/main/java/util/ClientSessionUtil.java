@@ -11,6 +11,9 @@ import java.util.Map;
  * @author jmx
  * @date 2020/3/11 9:50 AM
  */
+
+
+// 这个类其实不应该叫做Session，毕竟是在客户端，不过也只是用于命令行检测登录状态
 public class ClientSessionUtil {
 
     private static Map<String, Channel> userIdChannelMap = new HashMap<>();
