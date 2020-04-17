@@ -1,8 +1,6 @@
 package client.console;
 
 import io.netty.channel.Channel;
-import util.ClientSessionUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -12,6 +10,8 @@ import java.util.Scanner;
  * @date 2020/3/10 7:45 PM
  */
 public class ConsoleCommandManager implements ConsoleCommand {
+
+    public static boolean hasLogin = false;
 
     private Map<String, ConsoleCommand> consoleCommandMap;
 
@@ -32,20 +32,32 @@ public class ConsoleCommandManager implements ConsoleCommand {
     @Override
     public void exec(Scanner scanner, Channel channel) {
 
-        if (!ClientSessionUtil.hasLogin(channel)) {
-            System.out.print("请输入register注册或login登录: ");
+        while (!hasLogin) {
+            System.out.print("请输入：\n" +
+                    "----------\n" +
+                    "register【注册】\n" +
+                    "login【登录】\n" +
+                    "----------\n");
             String command = scanner.next();
-            if (!command.equals("register") && !command.equals("login")) {
-                return;
+            if (command.equals("register") || command.equals("login")) {
+                consoleCommandMap.get(command).exec(scanner, channel);
             }
-            consoleCommandMap.get(command).exec(scanner, channel);
+
         }
-        System.out.print("请输入命令：");
+        System.out.print("请输入：\n" +
+                "----------\n" +
+                "sendToUser【单聊】\n" +
+                "createGroup【创建群】\n" +
+                "listGroupMembers【获取群成员列表】\n" +
+                "joinGroup【加入群】\n" +
+                "quitGroup【退出群】\n" +
+                "sentToGroup【群聊】\n" +
+                "logout【退出登录】\n" +
+                "----------\n");
         String command = scanner.next();
-        while (command.equals("register") || command.equals("login")) {
-            System.out.println("您已登录，如需注册或者重新登录，请先输入logout退出!");
-            System.out.print("请输入命令：");
-            command = scanner.next();
+        if (command.equals("register") || command.equals("login")) {
+            System.out.println("您已登录，如需注册或者重新登录，请先输入logout退出登录!");
+            return;
         }
         ConsoleCommand consoleCommand = consoleCommandMap.get(command);
 

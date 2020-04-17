@@ -49,6 +49,16 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
         String name = registerRequestPacket.getUserName();
         String pwd = registerRequestPacket.getPassword();
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
+            // 先查询用户名是否存在
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE name = ?")) {
+                ps.setObject(1, name);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return false;
+                    }
+                }
+            }
+            // 再进行插入操作
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO users (name, pwd) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 ps.setObject(1, name);
                 ps.setObject(2, pwd);

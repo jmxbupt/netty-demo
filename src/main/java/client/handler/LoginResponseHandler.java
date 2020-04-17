@@ -1,10 +1,9 @@
 package client.handler;
 
+import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.LoginResponsePacket;
-import session.Session;
-import util.ClientSessionUtil;
 
 /**
  * @author jmx
@@ -20,7 +19,7 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         if (loginResponsePacket.isSuccess()) {
             String userId = loginResponsePacket.getUserId();
             System.out.println("[" + userName + "]登录成功，userId 为: " + userId);
-            ClientSessionUtil.bindSession(new Session(userId, userName), ctx.channel());
+            ConsoleCommandManager.hasLogin = true;
         } else {
             System.out.println("[" + userName + "]登录失败，原因：" + loginResponsePacket.getReason());
         }

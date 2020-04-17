@@ -1,9 +1,9 @@
 package client.handler;
 
+import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.LogoutResponsePacket;
-import util.ClientSessionUtil;
 
 /**
  * @author jmx
@@ -14,8 +14,7 @@ public class LogoutResponseHandler extends SimpleChannelInboundHandler<LogoutRes
     protected void channelRead0(ChannelHandlerContext ctx, LogoutResponsePacket logoutResponsePacket) {
         if (logoutResponsePacket.isSuccess()) {
             System.out.println("您已退出登录！");
-            // 客户端的SessionUtil应该和服务端分开吧
-            ClientSessionUtil.unBindSession(ctx.channel());
+            ConsoleCommandManager.hasLogin = false;
         } else {
             System.out.println("你当前无法退出登录！");
         }
