@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * @author jmx
  * @date 2020/3/9 10:44 PM
@@ -31,10 +30,15 @@ public class NettyClient {
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 8000;
 
+    private static Bootstrap bootstrap;
+
+    private static ConsoleThread consoleThread;
+
     public static void main(String[] args) {
         NioEventLoopGroup group = new NioEventLoopGroup();
 
-        Bootstrap bootstrap = new Bootstrap();
+        bootstrap = new Bootstrap();
+
         bootstrap
                 .group(group)
                 .channel(NioSocketChannel.class)
@@ -73,7 +77,6 @@ public class NettyClient {
                         ch.pipeline().addLast(new LogoutResponseHandler());
                         // 编码器
                         ch.pipeline().addLast(new PacketEncoder());
-
                         // 心跳定时器
                         ch.pipeline().addLast(new HeartbeatTimerHandler());
                     }
@@ -82,13 +85,50 @@ public class NettyClient {
         connect(bootstrap, HOST, PORT, MAX_RETRY);
     }
 
+    // 用于logout之后自动重连
+    public static void reConnect() {
+        // 这里使用标志位而不用consoleThread.interrupt()方法的原因是
+        // consoleThread内部会有sleep操作，无法中断
+        consoleThread.running = false;
+        try {
+            consoleThread.join();
+        } catch (InterruptedException e) {
+            // 忽略
+        }
+        System.out.println("重新连接服务器...");
+        connect(bootstrap, HOST, PORT, MAX_RETRY);
+    }
+
     private static void connect(final Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
-                System.out.println(new Date() + ": 连接成功，启动控制台线程...");
-                // 启动控制台线程
+
                 Channel channel = ((ChannelFuture) future).channel();
-                startConsoleThread(channel);
+
+                /*
+                 * 为什么要在这里新创建一个线程来进行接收控制台输入的数据和发送给服务端呢？
+                 * 解答：
+                 *      因为调用本办法是在监听中，而监听是用来监视客户端是否与服务端连接上了的
+                 *      监听会一直不间断的获取结果，一旦连接成功了，就会调用本方法来打开控制台接收数据
+                 *      所以如果我们在本方法中直接使用while循环的话，就会造成主线程堵塞在这里，无法处理回调
+                 */
+
+
+                // 不再重新启动线程，而是直接用一个hasLogout标识位 + while循环【不行！！！】
+//                System.out.println(new Date() + ": 连接成功，启动控制台...");
+//                while (!ConsoleCommandManager.hasLogout) {
+//                    ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+//                    Scanner scanner = new Scanner(System.in);
+//                    consoleCommandManager.exec(scanner, channel);
+//                }
+
+
+                // 启动控制台线程
+                System.out.println(new Date() + ": 连接成功，启动控制台线程...");
+//                startConsoleThread(channel);
+                consoleThread = new ConsoleThread(channel);
+                consoleThread.start();
+
             } else if (retry == 0) {
                 System.out.println("重试次数已用完，放弃连接！");
             } else {
@@ -113,5 +153,27 @@ public class NettyClient {
                 consoleCommandManager.exec(scanner, channel);
             }
         }).start();
+    }
+}
+
+class ConsoleThread extends Thread {
+
+    private Channel channel;
+    private ConsoleCommandManager consoleCommandManager;
+    private Scanner scanner;
+
+    public volatile boolean running = true;
+
+    public ConsoleThread(Channel channel) {
+        this.channel = channel;
+        consoleCommandManager = new ConsoleCommandManager();
+        scanner = new Scanner(System.in);
+    }
+
+    @Override
+    public void run() {
+        while (running) {
+            consoleCommandManager.exec(scanner, channel);
+        }
     }
 }

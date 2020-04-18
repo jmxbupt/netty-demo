@@ -94,6 +94,6 @@ public class NettyServer {
 
     private static void count(final ServerBootstrap serverBootstrap) {
         System.out.println(new Date() + " 当前连接：" + tcpCount +  " 在线用户：" + userCount);
-        serverBootstrap.config().group().schedule(() -> count(serverBootstrap), 10, TimeUnit.SECONDS);
+        serverBootstrap.config().group().schedule(() -> count(serverBootstrap), 5, TimeUnit.SECONDS);
     }
 }

@@ -20,11 +20,5 @@ public class LoginConsoleCommand implements ConsoleCommand {
         loginRequestPacket.setPassword(scanner.next());
 
         channel.writeAndFlush(loginRequestPacket);
-        // 等待登录回复
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {
-            // 忽略
-        }
     }
 }

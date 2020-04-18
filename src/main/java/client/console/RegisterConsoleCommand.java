@@ -21,11 +21,5 @@ public class RegisterConsoleCommand implements ConsoleCommand {
         registerRequestPacket.setPassword(scanner.next());
 
         channel.writeAndFlush(registerRequestPacket);
-        // 等待注册回复
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {
-            // 忽略
-        }
     }
 }

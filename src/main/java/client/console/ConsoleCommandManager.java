@@ -42,9 +42,15 @@ public class ConsoleCommandManager implements ConsoleCommand {
             String command = scanner.next();
             if (command.equals("register") || command.equals("login")) {
                 consoleCommandMap.get(command).exec(scanner, channel);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+                    // 忽略
+                }
             }
 
         }
+
         System.out.print("请输入：\n" +
                 "----------\n" +
                 "sendToUser【单聊】\n" +

@@ -1,5 +1,6 @@
 package client.handler;
 
+import client.NettyClient;
 import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,8 +17,15 @@ public class LogoutResponseHandler extends SimpleChannelInboundHandler<LogoutRes
             System.out.println("您已退出登录！");
             ConsoleCommandManager.hasLogin = false;
             ConsoleCommandManager.userId = null;
+            ctx.channel().close();
         } else {
             System.out.println("你当前无法退出登录！");
         }
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("客户端连接被关闭！");
+        NettyClient.reConnect();
     }
 }

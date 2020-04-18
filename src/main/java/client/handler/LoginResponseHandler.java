@@ -24,13 +24,5 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         } else {
             System.out.println("[" + userName + "]登录失败，原因：" + loginResponsePacket.getReason());
         }
-
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        // 对我们的应用程序来说，channelActive 和 channelInactive 这两个方法表明的含义是 TCP 连接的建立与释放
-        // 可以用来统计单机连接数
-        System.out.println("客户端连接被关闭！");
     }
 }
