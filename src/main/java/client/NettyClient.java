@@ -53,6 +53,8 @@ public class NettyClient {
                     protected void initChannel(SocketChannel ch) {
                         // 空闲检测
                         ch.pipeline().addLast(new IMIdleStateHandler());
+                        // 重连处理器
+                        ch.pipeline().addLast(new ReConnectHandler());
                         // 拆包器
                         ch.pipeline().addLast(new Spliter());
                         // 解码器
@@ -85,7 +87,7 @@ public class NettyClient {
         connect(bootstrap, HOST, PORT, MAX_RETRY);
     }
 
-    // 用于logout之后自动重连
+    // 用于logout或者服务端主动断开之后，客户端自动重连
     public static void reConnect() {
         // 这里使用标志位而不用consoleThread.interrupt()方法的原因是
         // consoleThread内部会有sleep操作，无法中断

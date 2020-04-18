@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import server.NettyServer;
+import util.SessionUtil;
 
 /**
  * @author jmx
@@ -29,6 +30,11 @@ public class CountUserHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         NettyServer.tcpCount.decrementAndGet();
+        // 针对客户端没有logout意外断线的情况
+        if (SessionUtil.hasLogin(ctx.channel())) {
+            SessionUtil.unBindSession(ctx.channel());
+            NettyServer.userCount.decrementAndGet();
+        }
     }
 
 
