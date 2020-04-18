@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.LogoutRequestPacket;
 import protocol.response.LogoutResponsePacket;
+import server.NettyServer;
 import util.SessionUtil;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequ
         SessionUtil.unBindSession(ctx.channel());
         LogoutResponsePacket logoutResponsePacket = new LogoutResponsePacket();
         logoutResponsePacket.setSuccess(true);
+        NettyServer.userCount.decrementAndGet();
         ctx.writeAndFlush(logoutResponsePacket);
     }
 }

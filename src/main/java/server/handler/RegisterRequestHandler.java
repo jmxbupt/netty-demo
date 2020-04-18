@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.RegisterRequestPacket;
 import protocol.response.RegisterResponsePacket;
+import server.NettyServer;
 import session.Session;
 import util.JDBCUtil;
 import util.SessionUtil;
@@ -36,6 +37,7 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
             registerResponsePacket.setSuccess(true);
             System.out.println("[" + userName +  "]注册成功！");
             SessionUtil.bindSession(new Session(registerResponsePacket.getUserId(), userName), ctx.channel());
+            NettyServer.userCount.incrementAndGet();
         } else {
             registerResponsePacket.setSuccess(false);
             registerResponsePacket.setReason("用户名已存在！");

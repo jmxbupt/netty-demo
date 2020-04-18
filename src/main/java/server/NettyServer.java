@@ -25,6 +25,9 @@ public class NettyServer {
 
     private static final int BEGIN_PORT = 8000;
 
+    // 单机连接数
+    public static AtomicInteger tcpCount = new AtomicInteger(0);
+    // 在线用户数
     public static AtomicInteger userCount = new AtomicInteger(0);
 
     public static void main(String[] args) {
@@ -90,7 +93,7 @@ public class NettyServer {
     }
 
     private static void count(final ServerBootstrap serverBootstrap) {
-        System.out.println(new Date() + "在线用户：" + userCount);
+        System.out.println(new Date() + " 当前连接：" + tcpCount +  " 在线用户：" + userCount);
         serverBootstrap.config().group().schedule(() -> count(serverBootstrap), 10, TimeUnit.SECONDS);
     }
 }

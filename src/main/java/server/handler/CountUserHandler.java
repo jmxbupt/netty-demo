@@ -18,14 +18,17 @@ public class CountUserHandler extends ChannelInboundHandlerAdapter {
 
     }
 
+    // channelActive和channelInactive代表TCP连接的建立与释放
+    // 1.可用于统计连接数
+    // 2.还可用于实现客户端ip黑白名单的过滤
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        NettyServer.userCount.incrementAndGet();
+        NettyServer.tcpCount.incrementAndGet();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        NettyServer.userCount.decrementAndGet();
+        NettyServer.tcpCount.decrementAndGet();
     }
 
 

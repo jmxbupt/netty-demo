@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.LoginRequestPacket;
 import protocol.response.LoginResponsePacket;
+import server.NettyServer;
 import session.Session;
 import util.JDBCUtil;
 import util.SessionUtil;
@@ -41,6 +42,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             loginResponsePacket.setSuccess(true);
             System.out.println("[" + loginRequestPacket.getUserName() +  "]登录成功！");
             SessionUtil.bindSession(new Session(loginResponsePacket.getUserId(), loginRequestPacket.getUserName()), ctx.channel());
+            NettyServer.userCount.incrementAndGet();
         } else {
             // 校验失败
             loginResponsePacket.setSuccess(false);
