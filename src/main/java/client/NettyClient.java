@@ -58,11 +58,14 @@ public class NettyClient {
                         // 拆包器
                         ch.pipeline().addLast(new Spliter());
                         // 解码器
+
                         ch.pipeline().addLast(new PacketDecoder());
                         // 注册响应处理器
                         ch.pipeline().addLast(new RegisterResponseHandler());
                         // 登录响应处理器
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        // 加好友请求相应
+                        ch.pipeline().addLast(new ContackAskResponseHandler());
                         // 单聊响应处理器
                         ch.pipeline().addLast(new MessageResponseHandler());
                         // 创建群响应处理器
@@ -77,6 +80,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new GroupMessageResponseHandler());
                         // 登出响应处理器
                         ch.pipeline().addLast(new LogoutResponseHandler());
+
                         // 编码器
                         ch.pipeline().addLast(new PacketEncoder());
                         // 心跳定时器

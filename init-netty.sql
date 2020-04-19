@@ -4,6 +4,8 @@ USE netty;
 
 -- 删除的时候，必须先删除有外键约束的表
 
+-- 联系请求表
+DROP TABLE IF EXISTS contactAsks;
 -- 联系人表
 DROP TABLE IF EXISTS contacts;
 -- 消息表
@@ -38,11 +40,27 @@ INSERT INTO users (name, pwd, online) VALUES ('何爸爸', 'hbb', FALSE);
 INSERT INTO users (name, pwd, online) VALUES ('何妈妈', 'hmm', FALSE);
 
 
+CREATE TABLE contactAsks (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    contact_id BIGINT NOT NULL,
+    ask_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ask_content VARCHAR(100) NOT NULL,
+    valid BOOL NOT NULL DEFAULT TRUE,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+    ON DELETE CASCADE,
+    FOREIGN KEY(contact_id) REFERENCES users(id)
+    ON DELETE CASCADE,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 CREATE TABLE contacts (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     contact_id BIGINT NOT NULL,
-    confirm_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    confirm_time TIMESTAMP NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
     ON DELETE CASCADE,
     FOREIGN KEY(contact_id) REFERENCES users(id)

@@ -45,4 +45,16 @@ public interface Command {
     Byte REGISTER_REQUEST = 19;
 
     Byte REGISTER_RESPONSE = 20;
+
+    Byte CONTACT_ASK_REQUEST = 21;
+
+    Byte CONTACT_ASK_RESPONSE = 22;
+
+    Byte CONTACT_CONFIRM_REQUEST = 23;
+
+    Byte CONTACT_CONFIRM_RESPONSE = 24;
+
+    Byte LIST_CONTACTS_REQUEST = 25;
+
+    Byte LIST_CONTACTS_RESPONSE = 26;
 }

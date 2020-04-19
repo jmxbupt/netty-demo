@@ -47,6 +47,12 @@ public class PacketCodec {
         packetTypeMap.put(Command.HEARTBEAT_RESPONSE, HeartbeatResponsePacket.class);
         packetTypeMap.put(Command.REGISTER_REQUEST, RegisterRequestPacket.class);
         packetTypeMap.put(Command.REGISTER_RESPONSE, RegisterResponsePacket.class);
+        packetTypeMap.put(Command.CONTACT_ASK_REQUEST, ContactAskRequestPacket.class);
+        packetTypeMap.put(Command.CONTACT_ASK_RESPONSE, ContactAskResponsePacket.class);
+        packetTypeMap.put(Command.CONTACT_CONFIRM_REQUEST, ContactConfirmRequestPacket.class);
+        packetTypeMap.put(Command.CONTACT_CONFIRM_RESPONSE, ContactConfirmResponsePacket.class);
+        packetTypeMap.put(Command.LIST_CONTACTS_REQUEST, ListContactsRequestPacket.class);
+        packetTypeMap.put(Command.LIST_CONTACTS_RESPONSE, ListContactsResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
