@@ -4,7 +4,10 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import server.NettyServer;
+import util.JDBCUtil;
 import util.SessionUtil;
+
+import java.sql.*;
 
 /**
  * @author jmx
@@ -30,8 +33,20 @@ public class CountUserHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         NettyServer.tcpCount.decrementAndGet();
-        // 针对客户端没有logout意外断线的情况
+        // 可以处理客户端logout或者意外断线的情况
+
         if (SessionUtil.hasLogin(ctx.channel())) {
+            // 先更新数据库中用户在线状态
+            String id = SessionUtil.getSession(ctx.channel()).getUserId();
+            try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
+                try (PreparedStatement ps = conn.prepareStatement("UPDATE users SET online = FALSE WHERE id = ?")) {
+                    ps.setObject(1, Long.valueOf(id));
+                    ps.executeUpdate();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             SessionUtil.unBindSession(ctx.channel());
             NettyServer.userCount.decrementAndGet();
         }

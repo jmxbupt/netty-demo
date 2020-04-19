@@ -30,10 +30,8 @@ public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequ
         for (String groupId: groupIds) {
             SessionUtil.getChannelGroup(groupId).remove(ctx.channel());
         }
-        SessionUtil.unBindSession(ctx.channel());
         LogoutResponsePacket logoutResponsePacket = new LogoutResponsePacket();
         logoutResponsePacket.setSuccess(true);
-        NettyServer.userCount.decrementAndGet();
         ctx.writeAndFlush(logoutResponsePacket);
     }
 }

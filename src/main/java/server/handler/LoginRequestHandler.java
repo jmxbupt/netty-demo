@@ -63,7 +63,14 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
                 ps.setObject(2, pwd);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        loginResponsePacket.setUserId(rs.getLong("id") + "");
+                        long id = rs.getLong("id");
+                        loginResponsePacket.setUserId(id + "");
+                        // 更新user表
+                        try (PreparedStatement ps1 = conn.prepareStatement("UPDATE users SET last_login_time = ? , online = TRUE WHERE id = ?")) {
+                            ps1.setObject(1, new Timestamp(new Date().getTime()));
+                            ps1.setObject(2, id);
+                            ps1.executeUpdate();
+                        }
                         return true;
                     }
                 }
