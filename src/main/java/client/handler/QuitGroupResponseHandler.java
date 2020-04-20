@@ -4,7 +4,6 @@ import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.QuitGroupResponsePacket;
-import session.Session;
 
 /**
  * @author jmx
@@ -15,16 +14,16 @@ public class QuitGroupResponseHandler extends SimpleChannelInboundHandler<QuitGr
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QuitGroupResponsePacket quitGroupResponsePacket) {
 
-        if (!quitGroupResponsePacket.isSuccess()) {
-            System.out.println(quitGroupResponsePacket.getReason());
+        String userId = quitGroupResponsePacket.getUserId();
+        String userName = quitGroupResponsePacket.getUserName();
+        String groupId = quitGroupResponsePacket.getGroupId();
+        String groupName = quitGroupResponsePacket.getGroupName();
+
+        if (ConsoleCommandManager.userId.equals(userId)) {
+            System.out.println("您已退出群【" + groupId + ":" + groupName + "】");
         } else {
-            Session session = quitGroupResponsePacket.getSession();
-            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
-                System.out.println("您已退出群[" + quitGroupResponsePacket.getGroupId() + "]");
-            } else {
-                System.out.println(session.getUserId() + ":" + session.getUserName()
-                        + "退出了群[" + quitGroupResponsePacket.getGroupId() + "]");
-            }
+            System.out.println("[" + userId + ":" + userName + "]退出了群【" + groupId + ":" + groupName + "】");
         }
+        
     }
 }

@@ -3,7 +3,6 @@ package protocol.response;
 import lombok.Data;
 import protocol.Packet;
 import protocol.command.Command;
-import session.Session;
 
 import java.util.List;
 
@@ -15,13 +14,13 @@ import java.util.List;
 @Data
 public class ListGroupMembersResponsePacket extends Packet {
 
-    private boolean success;
-
-    private String reason;
-
     private String groupId;
 
-    private List<Session> sessionList;
+    private String groupName;
+
+    private List<String> onlineUsers;
+
+    private List<String> offlineUsers;
 
     @Override
     public Byte getCommand() {

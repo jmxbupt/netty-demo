@@ -3,7 +3,6 @@ package protocol.response;
 import lombok.Data;
 import protocol.Packet;
 import protocol.command.Command;
-import session.Session;
 
 /**
  * @author jmx
@@ -13,13 +12,13 @@ import session.Session;
 @Data
 public class QuitGroupResponsePacket extends Packet {
 
-    private boolean success;
+    private String userId;
 
-    private String reason;
+    private String userName;
 
     private String groupId;
 
-    private Session session;
+    private String groupName;
 
     @Override
     public Byte getCommand() {

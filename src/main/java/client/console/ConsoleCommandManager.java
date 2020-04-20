@@ -31,10 +31,12 @@ public class ConsoleCommandManager implements ConsoleCommand {
 
         consoleCommandMap.put("message", new MessageConsoleCommand());
 
+        consoleCommandMap.put("listGroups", new ListGroupsConsoleCommand());
         consoleCommandMap.put("createGroup", new CreateGroupConsoleCommand());
         consoleCommandMap.put("listGroupMembers", new ListGroupMembersConsoleCommand());
         consoleCommandMap.put("joinGroup", new JoinGroupConsoleCommand());
         consoleCommandMap.put("quitGroup", new QuitGroupConsoleCommand());
+
         consoleCommandMap.put("groupMessage", new GroupMessageConsoleCommand());
 
 
@@ -45,7 +47,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
     public void exec(Scanner scanner, Channel channel) {
 
         while (!hasLogin) {
-            System.out.print("请输入：\n" +
+            System.out.print("[" + userId + "]请输入：\n" +
                     "----------\n" +
                     "register【注册】\n" +
                     "login【登录】\n" +
@@ -62,13 +64,14 @@ public class ConsoleCommandManager implements ConsoleCommand {
 
         }
 
-        System.out.print("请输入：\n" +
+        System.out.print("[" + userId + "]请输入：\n" +
                 "----------\n" +
                 "listContacts【获取好友列表】\n" +
                 "contactAsk【加好友请求】\n" +
                 "contactConfirm【加好友确认】\n" +
                 "contactDelete【删除好友】\n" +
                 "message【单聊】\n" +
+                "listGroups【获取群列表】\n" +
                 "createGroup【创建群】\n" +
                 "listGroupMembers【获取群成员列表】\n" +
                 "joinGroup【加入群】\n" +

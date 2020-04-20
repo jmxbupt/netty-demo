@@ -4,7 +4,6 @@ import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.JoinGroupResponsePacket;
-import session.Session;
 
 /**
  * @author jmx
@@ -15,17 +14,15 @@ public class JoinGroupResponseHandler extends SimpleChannelInboundHandler<JoinGr
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupResponsePacket joinGroupResponsePacket) {
 
-        if (!joinGroupResponsePacket.isSuccess()) {
-            System.out.println(joinGroupResponsePacket.getReason());
-        } else {
-            Session session = joinGroupResponsePacket.getSession();
-            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
-                System.out.println("您已加入群[" + joinGroupResponsePacket.getGroupId() + "]");
-            } else {
-                System.out.println(session.getUserId() + ":" + session.getUserName()
-                        + "加入了群[" + joinGroupResponsePacket.getGroupId() + "]");
-            }
-        }
+        String userId = joinGroupResponsePacket.getUserId();
+        String userName = joinGroupResponsePacket.getUserName();
+        String groupId = joinGroupResponsePacket.getGroupId();
+        String groupName = joinGroupResponsePacket.getGroupName();
 
+        if (ConsoleCommandManager.userId.equals(userId)) {
+            System.out.println("您已加入群【" + groupId + ":" + groupName + "】");
+        } else {
+            System.out.println("[" + userId + ":" + userName + "]加入了群【" + groupId + ":" + groupName + "】");
+        }
     }
 }

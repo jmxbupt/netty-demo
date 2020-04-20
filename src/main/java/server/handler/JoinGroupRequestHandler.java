@@ -1,12 +1,18 @@
 package server.handler;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
 import protocol.request.JoinGroupRequestPacket;
 import protocol.response.JoinGroupResponsePacket;
+import session.Session;
+import util.JDBCUtil;
 import util.SessionUtil;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author jmx
@@ -25,28 +31,54 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket joinGroupRequestPacket) {
 
-        JoinGroupResponsePacket joinGroupResponsePacket = new JoinGroupResponsePacket();
-
+        Session session = SessionUtil.getSession(ctx.channel());
+        String userId = session.getUserId();
+        String userName = session.getUserName();
         String groupId = joinGroupRequestPacket.getGroupId();
-        ChannelGroup channelGroup = SessionUtil.getChannelGroup(groupId);
 
-        if (channelGroup == null) {
-            joinGroupResponsePacket.setSuccess(false);
-            joinGroupResponsePacket.setReason("要加入的群不存在！");
-            ctx.writeAndFlush(joinGroupResponsePacket);
-            return;
+        JoinGroupResponsePacket joinGroupResponsePacket = new JoinGroupResponsePacket();
+        joinGroupResponsePacket.setUserId(userId);
+        joinGroupResponsePacket.setUserName(userName);
+        joinGroupResponsePacket.setGroupId(groupId);
+
+        List<String> userIds = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT name FROM groups WHERE id = ?")) {
+                ps.setObject(1, Long.valueOf(groupId));
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String groupName = rs.getString("name");
+                        joinGroupResponsePacket.setGroupName(groupName);
+                    }
+                }
+            }
+            // 先插入后查询，和退群操作不一样
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO group2user (group_id, user_id) VALUES (?, ?)")) {
+                ps.setObject(1, Long.valueOf(groupId));
+                ps.setObject(2, Long.valueOf(userId));
+                ps.executeUpdate();
+            }
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT user_id FROM group2user WHERE group_id = ?")) {
+                ps.setObject(1, Long.valueOf(groupId));
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        userIds.add(rs.getLong("user_id") + "");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        // 没有管重复加群的情况
-
-        String userId = SessionUtil.getSession(ctx.channel()).getUserId();
-        SessionUtil.getGroupIds(userId).add(groupId);
-
-        channelGroup.add(ctx.channel());
-        joinGroupResponsePacket.setSuccess(true);
-        joinGroupResponsePacket.setSession(SessionUtil.getSession(ctx.channel()));
-        joinGroupResponsePacket.setGroupId(groupId);
-        // 在客户端显示消息的时候区分新加入成员和其他成员
-        channelGroup.writeAndFlush(joinGroupResponsePacket);
+        for (String userId1 : userIds) {
+            Channel channel = SessionUtil.getChannel(userId1);
+            if (channel != null && SessionUtil.hasLogin(channel)) {
+                channel.writeAndFlush(joinGroupResponsePacket);
+            }
+        }
     }
 }

@@ -77,6 +77,8 @@ public class NettyClient {
                         // 单聊响应处理器
                         ch.pipeline().addLast(new MessageResponseHandler());
 
+                        // 获取群列表响应处理器
+                        ch.pipeline().addLast(new ListGroupsResponseHandler());
                         // 创建群响应处理器
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
                         // 获取群成员响应处理器

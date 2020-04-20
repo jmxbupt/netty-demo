@@ -61,4 +61,8 @@ public interface Command {
     Byte CONTACT_DELETE_REQUEST = 27;
 
     Byte CONTACT_DELETE_RESPONSE = 28;
+
+    Byte LIST_GROUPS_REQUEST = 29;
+
+    Byte LIST_GROUPS_RESPONSE = 30;
 }
