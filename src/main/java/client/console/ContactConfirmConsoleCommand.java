@@ -14,7 +14,7 @@ public class ContactConfirmConsoleCommand implements ConsoleCommand {
     @Override
     public void exec(Scanner scanner, Channel channel) {
 
-        System.out.println("输入userId，确认加好友请求：");
+        System.out.print("输入用户Id，确认加好友请求：");
         String userId = scanner.next();
 
         ContactConfirmRequestPacket contactConfirmRequestPacket = new ContactConfirmRequestPacket();

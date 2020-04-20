@@ -14,8 +14,11 @@ public class ContactAskConsoleCommand implements ConsoleCommand {
     @Override
     public void exec(Scanner scanner, Channel channel) {
 
-        System.out.println("输入userId + 空格 + content，发送加好友请求: ");
+        System.out.print("输入用户Id，请求加好友：");
         String contactId = scanner.next();
+        // 忽略输入流中的回车
+        scanner.nextLine();
+        System.out.print("输入请求消息：");
         String content = scanner.nextLine();
 
         ContactAskRequestPacket contactAskRequestPacket = new ContactAskRequestPacket();

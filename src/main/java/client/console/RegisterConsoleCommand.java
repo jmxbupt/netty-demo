@@ -14,7 +14,7 @@ public class RegisterConsoleCommand implements ConsoleCommand {
     @Override
     public void exec(Scanner scanner, Channel channel) {
 
-        System.out.print("输入注册用户名: ");
+        System.out.print("输入想注册的用户名: ");
         String userName = scanner.next();
         System.out.print("设置密码: ");
         String password = scanner.next();
