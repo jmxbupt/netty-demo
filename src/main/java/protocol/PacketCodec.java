@@ -53,6 +53,8 @@ public class PacketCodec {
         packetTypeMap.put(Command.CONTACT_CONFIRM_RESPONSE, ContactConfirmResponsePacket.class);
         packetTypeMap.put(Command.LIST_CONTACTS_REQUEST, ListContactsRequestPacket.class);
         packetTypeMap.put(Command.LIST_CONTACTS_RESPONSE, ListContactsResponsePacket.class);
+        packetTypeMap.put(Command.CONTACT_DELETE_REQUEST, ContactDeleteRequestPacket.class);
+        packetTypeMap.put(Command.CONTACT_DELETE_RESPONSE, ContactDeleteResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();

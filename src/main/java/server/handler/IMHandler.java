@@ -35,6 +35,7 @@ public class IMHandler extends SimpleChannelInboundHandler<Packet> {
         handlerMap.put(Command.CONTACT_ASK_REQUEST, ContactAskRequestHandler.INSTANCE);
         handlerMap.put(Command.CONTACT_CONFIRM_REQUEST, ContactConfirmRequestHandler.INSTANCE);
         handlerMap.put(Command.LIST_CONTACTS_REQUEST, ListContactsRequestHandler.INSTANCE);
+        handlerMap.put(Command.CONTACT_DELETE_REQUEST, ContactDeleteRequestHandler.INSTANCE);
     }
 
     @Override

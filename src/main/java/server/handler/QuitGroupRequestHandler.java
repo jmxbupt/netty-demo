@@ -19,6 +19,7 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
     public static final QuitGroupRequestHandler INSTANCE = new QuitGroupRequestHandler();
 
     private QuitGroupRequestHandler() {
+
     }
 
     @Override
@@ -36,7 +37,7 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
             return;
         }
 
-        if (!channelGroup.contains(SessionUtil.getChannel(SessionUtil.getSession(ctx.channel()).getUserId())))  {
+        if (!channelGroup.contains(SessionUtil.getChannel(SessionUtil.getSession(ctx.channel()).getUserId()))) {
             quitGroupResponsePacket.setSuccess(false);
             quitGroupResponsePacket.setReason("您不在群[" + groupId + "]中");
             ctx.writeAndFlush(quitGroupResponsePacket);

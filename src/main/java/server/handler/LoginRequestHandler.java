@@ -27,6 +27,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
     public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
 
     private LoginRequestHandler() {
+
     }
 
     @Override
@@ -40,7 +41,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (valid(loginRequestPacket, loginResponsePacket)) {
             // 校验成功
             loginResponsePacket.setSuccess(true);
-            System.out.println("[" + loginRequestPacket.getUserName() +  "]登录成功！");
+            System.out.println("[" + loginRequestPacket.getUserName() + "]登录成功！");
             SessionUtil.bindSession(new Session(loginResponsePacket.getUserId(), loginRequestPacket.getUserName()), ctx.channel());
             NettyServer.userCount.incrementAndGet();
         } else {

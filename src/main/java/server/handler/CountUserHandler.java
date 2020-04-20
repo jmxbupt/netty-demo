@@ -27,11 +27,13 @@ public class CountUserHandler extends ChannelInboundHandlerAdapter {
     // 2.还可用于实现客户端ip黑白名单的过滤
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+
         NettyServer.tcpCount.incrementAndGet();
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
+
         NettyServer.tcpCount.decrementAndGet();
         // 可以处理客户端logout或者意外断线的情况
 

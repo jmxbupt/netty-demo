@@ -22,7 +22,7 @@ public class HeartbeatTimerHandler extends ChannelInboundHandlerAdapter {
         super.channelActive(ctx);
     }
 
-    private  void scheduleSendHeartBeat(ChannelHandlerContext ctx) {
+    private void scheduleSendHeartBeat(ChannelHandlerContext ctx) {
 
         ctx.executor().schedule(() -> {
 

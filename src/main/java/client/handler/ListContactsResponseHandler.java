@@ -18,21 +18,21 @@ public class ListContactsResponseHandler extends SimpleChannelInboundHandler<Lis
         System.out.println("未处理的加好友请求");
         String delimeter = "----------";
         StringJoiner sj = new StringJoiner("\n", delimeter + "\n", "\n" + delimeter);
-        for (String str: listContactsResponsePacket.getContactAsks()) {
+        for (String str : listContactsResponsePacket.getContactAsks()) {
             sj.add(str);
         }
         System.out.println(sj.toString());
 
         System.out.println("在线好友");
         sj = new StringJoiner("\n", delimeter + "\n", "\n" + delimeter);
-        for (String str: listContactsResponsePacket.getOnlineContacts()) {
+        for (String str : listContactsResponsePacket.getOnlineContacts()) {
             sj.add(str);
         }
         System.out.println(sj.toString());
 
         System.out.println("离线好友");
         sj = new StringJoiner("\n", delimeter + "\n", "\n" + delimeter);
-        for (String str: listContactsResponsePacket.getOfflineContacts()) {
+        for (String str : listContactsResponsePacket.getOfflineContacts()) {
             sj.add(str);
         }
         System.out.println(sj.toString());

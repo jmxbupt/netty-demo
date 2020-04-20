@@ -16,10 +16,12 @@ public class HeartbeatRequestHandler extends SimpleChannelInboundHandler<Heartbe
     public static final HeartbeatRequestHandler INSTANCE = new HeartbeatRequestHandler();
 
     private HeartbeatRequestHandler() {
+
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HeartbeatRequestPacket heartbeatRequestPacket) {
+
         ctx.writeAndFlush(new HeartbeatResponsePacket());
     }
 }

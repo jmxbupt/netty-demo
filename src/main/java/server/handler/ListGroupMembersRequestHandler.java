@@ -24,6 +24,7 @@ public class ListGroupMembersRequestHandler extends SimpleChannelInboundHandler<
     public static final ListGroupMembersRequestHandler INSTANCE = new ListGroupMembersRequestHandler();
 
     private ListGroupMembersRequestHandler() {
+
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ListGroupMembersRequestHandler extends SimpleChannelInboundHandler<
         }
 
         List<Session> sessionList = new ArrayList<>();
-        for (Channel channel: channelGroup) {
+        for (Channel channel : channelGroup) {
             sessionList.add(SessionUtil.getSession(channel));
         }
 

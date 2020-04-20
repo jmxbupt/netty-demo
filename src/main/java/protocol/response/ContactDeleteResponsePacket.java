@@ -5,12 +5,12 @@ import protocol.command.Command;
 
 /**
  * @author jmx
- * @date 2020/3/11 10:18 PM
+ * @date 2020/4/20 11:04 AM
  */
-public class HeartbeatResponsePacket extends Packet {
+public class ContactDeleteResponsePacket extends Packet {
 
     @Override
     public Byte getCommand() {
-        return Command.HEARTBEAT_RESPONSE;
+        return Command.CONTACT_DELETE_RESPONSE;
     }
 }

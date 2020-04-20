@@ -20,6 +20,7 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
     public static final MessageRequestHandler INSTANCE = new MessageRequestHandler();
 
     private MessageRequestHandler() {
+
     }
 
     @Override

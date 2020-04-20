@@ -11,8 +11,10 @@ import protocol.response.LogoutResponsePacket;
  * @date 2020/3/10 8:17 PM
  */
 public class LogoutResponseHandler extends SimpleChannelInboundHandler<LogoutResponsePacket> {
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LogoutResponsePacket logoutResponsePacket) {
+
         if (logoutResponsePacket.isSuccess()) {
             System.out.println("您已退出登录！");
             ConsoleCommandManager.hasLogin = false;

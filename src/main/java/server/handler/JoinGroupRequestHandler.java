@@ -19,6 +19,7 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
     public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
 
     private JoinGroupRequestHandler() {
+
     }
 
     @Override

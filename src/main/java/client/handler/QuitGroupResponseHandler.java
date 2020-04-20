@@ -11,6 +11,7 @@ import session.Session;
  * @date 2020/3/10 11:13 PM
  */
 public class QuitGroupResponseHandler extends SimpleChannelInboundHandler<QuitGroupResponsePacket> {
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QuitGroupResponsePacket quitGroupResponsePacket) {
 

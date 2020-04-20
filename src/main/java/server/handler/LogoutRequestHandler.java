@@ -21,13 +21,15 @@ public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequ
     public static final LogoutRequestHandler INSTANCE = new LogoutRequestHandler();
 
     private LogoutRequestHandler() {
+
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LogoutRequestPacket logoutRequestPacket) {
+
         String userId = SessionUtil.getSession(ctx.channel()).getUserId();
         List<String> groupIds = SessionUtil.getGroupIds(userId);
-        for (String groupId: groupIds) {
+        for (String groupId : groupIds) {
             SessionUtil.getChannelGroup(groupId).remove(ctx.channel());
         }
         LogoutResponsePacket logoutResponsePacket = new LogoutResponsePacket();

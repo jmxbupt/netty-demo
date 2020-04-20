@@ -12,6 +12,7 @@ public class ContactConfirmResponseHandler extends SimpleChannelInboundHandler<C
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ContactConfirmResponsePacket contactConfirmResponsePacket) {
+
         System.out.println("成功添加好友，请注意查看...");
     }
 }

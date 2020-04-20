@@ -18,10 +18,12 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     public static final AuthHandler INSTANCE = new AuthHandler();
 
     private AuthHandler() {
+
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
         if (!SessionUtil.hasLogin(ctx.channel())) {
             // 没有登录就直接关闭这条连接，不过实际生产环境不会这么粗暴
             ctx.channel().close();
@@ -34,6 +36,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
+
         if (SessionUtil.hasLogin(ctx.channel())) {
             System.out.println("[" + SessionUtil.getSession(ctx.channel()).getUserName() + "]登录验证完毕，无需再次验证");
         } else {

@@ -26,6 +26,7 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
     public static final CreateGroupRequestHandler INSTANCE = new CreateGroupRequestHandler();
 
     private CreateGroupRequestHandler() {
+
     }
 
     @Override
@@ -37,7 +38,7 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
         ChannelGroup channelGroup = new DefaultChannelGroup(ctx.executor());
 
         // 忽略无效的userId，筛选出待加入群聊的用户的 channel 和 session
-        for (String userId: userIdList) {
+        for (String userId : userIdList) {
             Channel channel = SessionUtil.getChannel(userId);
             if (channel != null) {
                 channelGroup.add(channel);
@@ -62,7 +63,7 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
 
             // 保存群相关的信息
             SessionUtil.bindChannelGroup(createGroupResponsePacket.getGroupId(), channelGroup);
-            for (Session session: sessionList) {
+            for (Session session : sessionList) {
                 String userId = session.getUserId();
                 SessionUtil.getGroupIds(userId).add(createGroupResponsePacket.getGroupId());
             }
@@ -72,9 +73,6 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
             createGroupResponsePacket.setReason("群创建失败，请检查userId列表是否有效！");
             ctx.writeAndFlush(createGroupResponsePacket);
         }
-
-
-
 
 
     }

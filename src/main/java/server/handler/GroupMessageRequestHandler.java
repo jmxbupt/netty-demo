@@ -19,6 +19,7 @@ public class GroupMessageRequestHandler extends SimpleChannelInboundHandler<Grou
     public static final GroupMessageRequestHandler INSTANCE = new GroupMessageRequestHandler();
 
     private GroupMessageRequestHandler() {
+
     }
 
     @Override

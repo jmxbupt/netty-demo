@@ -12,6 +12,7 @@ public class ContackAskResponseHandler extends SimpleChannelInboundHandler<Conta
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ContactAskResponsePacket contactAskResponsePacket) {
+
         System.out.println("收到加好友请求，请注意查看...");
     }
 }

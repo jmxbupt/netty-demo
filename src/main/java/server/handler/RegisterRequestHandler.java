@@ -25,6 +25,7 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
     private RegisterRequestHandler() {
 
     }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RegisterRequestPacket registerRequestPacket) {
 
@@ -35,7 +36,7 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
 
         if (successRegisterd(registerRequestPacket, registerResponsePacket)) {
             registerResponsePacket.setSuccess(true);
-            System.out.println("[" + userName +  "]注册成功！");
+            System.out.println("[" + userName + "]注册成功！");
             SessionUtil.bindSession(new Session(registerResponsePacket.getUserId(), userName), ctx.channel());
             NettyServer.userCount.incrementAndGet();
         } else {

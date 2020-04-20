@@ -30,6 +30,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
         consoleCommandMap.put("contactAsk", new ContactAskConsoleCommand());
         consoleCommandMap.put("contactConfirm", new ContactConfirmConsoleCommand());
         consoleCommandMap.put("listContacts", new ListContactsConsoleCommand());
+        consoleCommandMap.put("contactDelete", new ContactDeleteConsoleCommand());
     }
 
 
@@ -59,6 +60,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
                 "listContacts【获取好友列表】\n" +
                 "contactAsk【加好友请求】\n" +
                 "contactConfirm【加好友确认】\n" +
+                "contactDelete【删除好友】\n" +
                 "sendToUser【单聊】\n" +
                 "createGroup【创建群】\n" +
                 "listGroupMembers【获取群成员列表】\n" +

@@ -23,6 +23,7 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
     public static final ContactAskRequestHandler INSTANCE = new ContactAskRequestHandler();
 
     private ContactAskRequestHandler() {
+
     }
 
     @Override

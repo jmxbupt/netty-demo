@@ -13,6 +13,7 @@ import java.util.List;
  * @date 2020/3/10 8:19 PM
  */
 public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<CreateGroupResponsePacket> {
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupResponsePacket createGroupResponsePacket) {
 
@@ -24,7 +25,7 @@ public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<Crea
             if (ConsoleCommandManager.userId.equals(session.getUserId())) {
                 System.out.print("群[" + createGroupResponsePacket.getGroupId() + "]创建成功，");
             } else {
-                System.out.print(session.getUserId() + ":" +  session.getUserName()
+                System.out.print(session.getUserId() + ":" + session.getUserName()
                         + " 创建了群[" + createGroupResponsePacket.getGroupId() + "]，");
             }
             System.out.println("群成员有：" + sessionList);

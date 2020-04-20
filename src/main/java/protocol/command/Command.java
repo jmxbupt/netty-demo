@@ -57,4 +57,8 @@ public interface Command {
     Byte LIST_CONTACTS_REQUEST = 25;
 
     Byte LIST_CONTACTS_RESPONSE = 26;
+
+    Byte CONTACT_DELETE_REQUEST = 27;
+
+    Byte CONTACT_DELETE_RESPONSE = 28;
 }

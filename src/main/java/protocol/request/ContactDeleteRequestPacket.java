@@ -6,17 +6,15 @@ import protocol.command.Command;
 
 /**
  * @author jmx
- * @date 2020/4/19 4:40 PM
+ * @date 2020/4/20 11:03 AM
  */
 @Data
-public class ContactAskRequestPacket extends Packet {
+public class ContactDeleteRequestPacket extends Packet {
 
     String contactId;
 
-    String content;
-
     @Override
     public Byte getCommand() {
-        return Command.CONTACT_ASK_REQUEST;
+        return Command.CONTACT_DELETE_REQUEST;
     }
 }

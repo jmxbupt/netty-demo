@@ -71,6 +71,8 @@ public class NettyClient {
                         ch.pipeline().addLast(new ContackAskResponseHandler());
                         // 加好友确认响应处理器
                         ch.pipeline().addLast(new ContactConfirmResponseHandler());
+                        // 删除好友响应处理器
+                        ch.pipeline().addLast(new ContactDeleteResponseHandler());
 
                         // 单聊响应处理器
                         ch.pipeline().addLast(new MessageResponseHandler());
