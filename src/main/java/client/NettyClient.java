@@ -58,16 +58,23 @@ public class NettyClient {
                         // 拆包器
                         ch.pipeline().addLast(new Spliter());
                         // 解码器
-
                         ch.pipeline().addLast(new PacketDecoder());
+
                         // 注册响应处理器
                         ch.pipeline().addLast(new RegisterResponseHandler());
                         // 登录响应处理器
                         ch.pipeline().addLast(new LoginResponseHandler());
-                        // 加好友请求相应
+
+                        // 获取好友列表响应处理器
+                        ch.pipeline().addLast(new ListContactsResponseHandler());
+                        // 加好友请求响应处理器
                         ch.pipeline().addLast(new ContackAskResponseHandler());
+                        // 加好友确认响应处理器
+                        ch.pipeline().addLast(new ContactConfirmResponseHandler());
+
                         // 单聊响应处理器
                         ch.pipeline().addLast(new MessageResponseHandler());
+
                         // 创建群响应处理器
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
                         // 获取群成员响应处理器
@@ -78,6 +85,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new QuitGroupResponseHandler());
                         // 群消息响应处理器
                         ch.pipeline().addLast(new GroupMessageResponseHandler());
+
                         // 登出响应处理器
                         ch.pipeline().addLast(new LogoutResponseHandler());
 

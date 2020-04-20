@@ -4,6 +4,14 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.ListContactsRequestPacket;
+import protocol.response.ListContactsResponsePacket;
+import session.Session;
+import util.JDBCUtil;
+import util.SessionUtil;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author jmx
@@ -21,5 +29,54 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListContactsRequestPacket listContactsRequestPacket) {
 
+        String user_id = SessionUtil.getSession(ctx.channel()).getUserId();
+        ListContactsResponsePacket listContactsResponsePacket = new ListContactsResponsePacket();
+
+        List<String> contactAsks = new ArrayList<>();
+        List<String> contacts = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
+            // 查询未处理的加好友请求
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT c.user_id, c.ask_content, u.name " +
+                            "FROM contactAsks c " +
+                            "INNER JOIN users u " +
+                            "ON c.user_id = u.id " +
+                            "WHERE c.contact_id = ? AND valid = TRUE")) {
+                ps.setObject(1, user_id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        String userId = rs.getLong("user_id") + "";
+                        String content = rs.getString("ask_content");
+                        String name = rs.getString("name");
+                        contactAsks.add("[" + userId + ":" + name + "]发出的加好友请求：" + content);
+                    }
+                }
+            }
+            // 查询好友
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT c.contact_id, u.name " +
+                            "FROM contacts c " +
+                            "INNER JOIN users u " +
+                            "ON c.contact_id = u.id " +
+                            "WHERE c.user_id = ?")) {
+                ps.setObject(1, user_id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        System.out.println();
+                        String contactId = rs.getLong("contact_id") + "";
+                        String name = rs.getString("name");
+                        contacts.add("[" + contactId + ":" + name + "]");
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        listContactsResponsePacket.setContactAsks(contactAsks);
+        listContactsResponsePacket.setContacts(contacts);
+        ctx.writeAndFlush(listContactsResponsePacket);
     }
 }

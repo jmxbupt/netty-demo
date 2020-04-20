@@ -36,7 +36,7 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
 
 
         // 处理contactAsks表，需要先查询之前是否请求过
-        // 因为有可能是删除好友之后再重新请求，这样处理是为了
+        // 因为有可能是删除好友之后再重新请求，这样处理是为了方便查询contactAsks表
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT id FROM contactAsks WHERE user_id = ? AND contact_id = ?")) {
@@ -57,8 +57,8 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
                         System.out.println("请求加好友...");
                         try (PreparedStatement ps1 = conn.prepareStatement(
                                 "INSERT INTO contactAsks (user_id, contact_id, ask_content) VALUES (?, ?, ?)")) {
-                            ps1.setObject(1, user_id);
-                            ps1.setObject(2, contact_id);
+                            ps1.setObject(1, Long.valueOf(user_id));
+                            ps1.setObject(2, Long.valueOf(contact_id));
                             ps1.setObject(3, content);
                             ps1.executeUpdate();
                         }

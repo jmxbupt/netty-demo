@@ -11,7 +11,7 @@ import protocol.command.Command;
 @Data
 public class ContactConfirmRequestPacket extends Packet {
 
-    String contactId;
+    String userId;
 
     @Override
     public Byte getCommand() {

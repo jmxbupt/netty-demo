@@ -60,7 +60,7 @@ CREATE TABLE contacts (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     contact_id BIGINT NOT NULL,
-    confirm_time TIMESTAMP NULL,
+    confirm_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
     ON DELETE CASCADE,
     FOREIGN KEY(contact_id) REFERENCES users(id)

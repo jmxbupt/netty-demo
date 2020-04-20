@@ -28,6 +28,8 @@ public class ConsoleCommandManager implements ConsoleCommand {
         consoleCommandMap.put("sendToGroup", new SendToGroupConsoleCommand());
         consoleCommandMap.put("register", new RegisterConsoleCommand());
         consoleCommandMap.put("contactAsk", new ContactAskConsoleCommand());
+        consoleCommandMap.put("contactConfirm", new ContactConfirmConsoleCommand());
+        consoleCommandMap.put("listContacts", new ListContactsConsoleCommand());
     }
 
 
@@ -54,7 +56,9 @@ public class ConsoleCommandManager implements ConsoleCommand {
 
         System.out.print("请输入：\n" +
                 "----------\n" +
-                "contactAsk【加好友】\n" +
+                "listContacts【获取好友列表】\n" +
+                "contactAsk【加好友请求】\n" +
+                "contactConfirm【加好友确认】\n" +
                 "sendToUser【单聊】\n" +
                 "createGroup【创建群】\n" +
                 "listGroupMembers【获取群成员列表】\n" +
