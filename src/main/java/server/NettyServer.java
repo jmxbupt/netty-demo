@@ -11,7 +11,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import server.handler.*;
+import util.JDBCUtil;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,6 +61,16 @@ public class NettyServer {
                 .handler(new ChannelInitializer<NioServerSocketChannel>() {
                     protected void initChannel(NioServerSocketChannel ch) {
                         System.out.println("服务器启动中...");
+                        // 将uses表中所有用户的online置为FALSE（针对服务器之前崩溃的情况）
+                        try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
+                            try (PreparedStatement ps = conn.prepareStatement(
+                                    "UPDATE users SET online = FALSE")) {
+                                ps.executeUpdate();
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("用户登录状态重置完毕...");
 
                     }
                 })
