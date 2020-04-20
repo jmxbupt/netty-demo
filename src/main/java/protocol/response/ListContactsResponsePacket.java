@@ -15,7 +15,9 @@ public class ListContactsResponsePacket extends Packet {
 
     private List<String> contactAsks;
 
-    private List<String> contacts;
+    private List<String> onlineContacts;
+
+    private List<String> offlineContacts;
 
     @Override
     public Byte getCommand() {

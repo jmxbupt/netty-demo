@@ -33,7 +33,8 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
         ListContactsResponsePacket listContactsResponsePacket = new ListContactsResponsePacket();
 
         List<String> contactAsks = new ArrayList<>();
-        List<String> contacts = new ArrayList<>();
+        List<String> onlineContacts = new ArrayList<>();
+        List<String> offlineContacts = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             // 查询未处理的加好友请求
@@ -55,7 +56,7 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
             }
             // 查询好友
             try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT c.contact_id, u.name " +
+                    "SELECT c.contact_id, u.name, u.online " +
                             "FROM contacts c " +
                             "INNER JOIN users u " +
                             "ON c.contact_id = u.id " +
@@ -66,7 +67,12 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
                         System.out.println();
                         String contactId = rs.getLong("contact_id") + "";
                         String name = rs.getString("name");
-                        contacts.add("[" + contactId + ":" + name + "]");
+                        boolean online = rs.getBoolean("online");
+                        if (online) {
+                            onlineContacts.add("[" + contactId + ":" + name + "]");
+                        } else {
+                            offlineContacts.add("[" + contactId + ":" + name + "]");
+                        }
                     }
                 }
             }
@@ -76,7 +82,8 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
         }
 
         listContactsResponsePacket.setContactAsks(contactAsks);
-        listContactsResponsePacket.setContacts(contacts);
+        listContactsResponsePacket.setOnlineContacts(onlineContacts);
+        listContactsResponsePacket.setOfflineContacts(offlineContacts);
         ctx.writeAndFlush(listContactsResponsePacket);
     }
 }
