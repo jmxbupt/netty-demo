@@ -8,8 +8,6 @@ import protocol.command.Command;
  * @author jmx
  * @date 2020/3/10 7:37 PM
  */
-
-@Data
 public class LogoutRequestPacket extends Packet {
 
     @Override

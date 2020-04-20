@@ -10,17 +10,11 @@ import protocol.command.Command;
  * @date 2020/4/19 4:40 PM
  */
 @Data
-@NoArgsConstructor
 public class ContactAskRequestPacket extends Packet {
 
     String contactId;
 
     String content;
-
-    public ContactAskRequestPacket(String contactId, String content) {
-        this.contactId = contactId;
-        this.content = content;
-    }
 
     @Override
     public Byte getCommand() {

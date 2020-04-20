@@ -16,6 +16,7 @@ public class ContactConfirmConsoleCommand implements ConsoleCommand {
 
         System.out.println("输入userId，确认加好友请求：");
         String userId = scanner.next();
+
         ContactConfirmRequestPacket contactConfirmRequestPacket = new ContactConfirmRequestPacket();
         contactConfirmRequestPacket.setUserId(userId);
         channel.writeAndFlush(contactConfirmRequestPacket);

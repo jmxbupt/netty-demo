@@ -11,17 +11,11 @@ import protocol.command.Command;
  */
 
 @Data
-@NoArgsConstructor
 public class GroupMessageRequestPacket extends Packet {
 
     private String groupId;
 
     private String message;
-
-    public GroupMessageRequestPacket(String groupId, String message) {
-        this.groupId = groupId;
-        this.message = message;
-    }
 
     @Override
     public Byte getCommand() {

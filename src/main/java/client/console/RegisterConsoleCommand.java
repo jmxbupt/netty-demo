@@ -13,13 +13,15 @@ public class RegisterConsoleCommand implements ConsoleCommand {
 
     @Override
     public void exec(Scanner scanner, Channel channel) {
-        RegisterRequestPacket registerRequestPacket = new RegisterRequestPacket();
 
         System.out.print("输入注册用户名: ");
-        registerRequestPacket.setUserName(scanner.next());
+        String userName = scanner.next();
         System.out.print("设置密码: ");
-        registerRequestPacket.setPassword(scanner.next());
+        String password = scanner.next();
 
+        RegisterRequestPacket registerRequestPacket = new RegisterRequestPacket();
+        registerRequestPacket.setUserName(userName);
+        registerRequestPacket.setPassword(password);
         channel.writeAndFlush(registerRequestPacket);
     }
 }
