@@ -17,20 +17,27 @@ public class ConsoleCommandManager implements ConsoleCommand {
     private Map<String, ConsoleCommand> consoleCommandMap;
 
     public ConsoleCommandManager() {
+
         consoleCommandMap = new HashMap<>();
+
+        consoleCommandMap.put("register", new RegisterConsoleCommand());
         consoleCommandMap.put("login", new LoginConsoleCommand());
-        consoleCommandMap.put("sendToUser", new SendToUserConsoleCommand());
         consoleCommandMap.put("logout", new LogoutConsoleCommand());
+
+        consoleCommandMap.put("listContacts", new ListContactsConsoleCommand());
+        consoleCommandMap.put("contactAsk", new ContactAskConsoleCommand());
+        consoleCommandMap.put("contactConfirm", new ContactConfirmConsoleCommand());
+        consoleCommandMap.put("contactDelete", new ContactDeleteConsoleCommand());
+
+        consoleCommandMap.put("message", new MessageConsoleCommand());
+
         consoleCommandMap.put("createGroup", new CreateGroupConsoleCommand());
         consoleCommandMap.put("listGroupMembers", new ListGroupMembersConsoleCommand());
         consoleCommandMap.put("joinGroup", new JoinGroupConsoleCommand());
         consoleCommandMap.put("quitGroup", new QuitGroupConsoleCommand());
-        consoleCommandMap.put("sendToGroup", new SendToGroupConsoleCommand());
-        consoleCommandMap.put("register", new RegisterConsoleCommand());
-        consoleCommandMap.put("contactAsk", new ContactAskConsoleCommand());
-        consoleCommandMap.put("contactConfirm", new ContactConfirmConsoleCommand());
-        consoleCommandMap.put("listContacts", new ListContactsConsoleCommand());
-        consoleCommandMap.put("contactDelete", new ContactDeleteConsoleCommand());
+        consoleCommandMap.put("groupMessage", new GroupMessageConsoleCommand());
+
+
     }
 
 
@@ -61,12 +68,12 @@ public class ConsoleCommandManager implements ConsoleCommand {
                 "contactAsk【加好友请求】\n" +
                 "contactConfirm【加好友确认】\n" +
                 "contactDelete【删除好友】\n" +
-                "sendToUser【单聊】\n" +
+                "message【单聊】\n" +
                 "createGroup【创建群】\n" +
                 "listGroupMembers【获取群成员列表】\n" +
                 "joinGroup【加入群】\n" +
                 "quitGroup【退出群】\n" +
-                "sendToGroup【群聊】\n" +
+                "groupMessage【群聊】\n" +
                 "logout【退出登录】\n" +
                 "----------\n");
         String command = scanner.next();

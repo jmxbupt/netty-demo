@@ -12,15 +12,11 @@ import protocol.command.Command;
 @Data
 public class MessageResponsePacket extends Packet {
 
-    private boolean success;
+    private String userId;
 
-    private String reason;
+    private String userName;
 
-    private String fromUserId;
-
-    private String fromUserName;
-
-    private String message;
+    private String content;
 
     @Override
     public Byte getCommand() {

@@ -13,14 +13,10 @@ public class MessageResponseHandler extends SimpleChannelInboundHandler<MessageR
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageResponsePacket messageResponsePacket) {
 
-        if (!messageResponsePacket.isSuccess()) {
-            System.out.println(messageResponsePacket.getReason());
-        } else {
-            String fromUserId = messageResponsePacket.getFromUserId();
-            String fromUserName = messageResponsePacket.getFromUserName();
-            System.out.println(fromUserId + ":" + fromUserName + " -> " + messageResponsePacket.getMessage());
-        }
+        String userId = messageResponsePacket.getUserId();
+        String userName = messageResponsePacket.getUserName();
+        String content = messageResponsePacket.getContent();
 
-
+        System.out.println("[" + userId + ":" + userName + "] " + content);
     }
 }
