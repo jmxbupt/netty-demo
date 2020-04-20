@@ -5,6 +5,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import session.Session;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class SessionUtil {
             userIdChannelMap.remove(userId);
             userIdGroupIdsMap.remove(userId);
             channel.attr(Attributes.SESSION).set(null);
-            System.out.println(session + " 退出登录！");
+            System.out.println(new Date() + "：" + session + "退出登录！");
         }
     }
 

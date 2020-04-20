@@ -46,7 +46,7 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         System.out.println("之前请求过加好友，重新请求...");
-                        Long id = rs.getLong("id");
+                        long id = rs.getLong("id");
                         try (PreparedStatement ps1 = conn.prepareStatement(
                                 "UPDATE contactAsks SET ask_time = ?, ask_content = ?, valid = TRUE WHERE id = ?")) {
                             ps1.setObject(1, new Timestamp(new Date().getTime()));

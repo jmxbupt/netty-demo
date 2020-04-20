@@ -41,14 +41,14 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (valid(loginRequestPacket, loginResponsePacket)) {
             // 校验成功
             loginResponsePacket.setSuccess(true);
-            System.out.println("[" + loginRequestPacket.getUserName() + "]登录成功！");
+            System.out.println(new Date() + "：[" + loginRequestPacket.getUserName() + "]登录成功！");
             SessionUtil.bindSession(new Session(loginResponsePacket.getUserId(), loginRequestPacket.getUserName()), ctx.channel());
             NettyServer.userCount.incrementAndGet();
         } else {
             // 校验失败
             loginResponsePacket.setSuccess(false);
             loginResponsePacket.setReason("账号密码校验失败");
-            System.out.println(new Date() + ": 登录失败！");
+            System.out.println(new Date() + "：[" + loginRequestPacket.getUserName() + "]登录失败！");
         }
 
         ctx.writeAndFlush(loginResponsePacket);

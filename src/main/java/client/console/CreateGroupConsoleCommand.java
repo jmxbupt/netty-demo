@@ -12,16 +12,21 @@ import java.util.Scanner;
  */
 public class CreateGroupConsoleCommand implements ConsoleCommand {
 
-    private static final String USER_ID_SPLITER = ",";
+    private static final String SPLITER = ",";
 
     @Override
     public void exec(Scanner scanner, Channel channel) {
 
-        System.out.print("【拉人群聊】输入userId列表，userId之间英文逗号隔开: ");
-        String userIds = scanner.next();
+        // 不能输入自己的Id，且至少输入两个用户Id（否则就没有必要建群了）
+        System.out.print("输入想拉入群的用户Id，用英文逗号隔开: ");
+        String contactIds = scanner.next();
+        System.out.print("输入群名称：");
+        String groupName = scanner.next();
+
 
         CreateGroupRequestPacket createGroupRequestPacket = new CreateGroupRequestPacket();
-        createGroupRequestPacket.setUserIdList(Arrays.asList(userIds.split(USER_ID_SPLITER)));
+        createGroupRequestPacket.setContactIds(Arrays.asList(contactIds.split(SPLITER)));
+        createGroupRequestPacket.setGroupName(groupName);
         channel.writeAndFlush(createGroupRequestPacket);
     }
 }

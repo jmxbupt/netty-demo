@@ -13,7 +13,9 @@ import java.util.List;
 @Data
 public class CreateGroupRequestPacket extends Packet {
 
-    private List<String> userIdList;
+    private List<String> contactIds;
+
+    private String groupName;
 
     @Override
     public Byte getCommand() {

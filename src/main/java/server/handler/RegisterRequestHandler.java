@@ -30,27 +30,31 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
     protected void channelRead0(ChannelHandlerContext ctx, RegisterRequestPacket registerRequestPacket) {
 
         System.out.println(new Date() + "：收到客户端注册请求...");
-        String userName = registerRequestPacket.getUserName();
-        RegisterResponsePacket registerResponsePacket = new RegisterResponsePacket();
-        registerResponsePacket.setUserName(userName);
 
-        if (successRegisterd(registerRequestPacket, registerResponsePacket)) {
+        RegisterResponsePacket registerResponsePacket = new RegisterResponsePacket();
+
+        if (successRegister(registerRequestPacket, registerResponsePacket)) {
             registerResponsePacket.setSuccess(true);
-            System.out.println("[" + userName + "]注册成功！");
-            SessionUtil.bindSession(new Session(registerResponsePacket.getUserId(), userName), ctx.channel());
+            String userId = registerResponsePacket.getUserId();
+            String userName = registerResponsePacket.getUserName();
+            SessionUtil.bindSession(new Session(userId, userName), ctx.channel());
             NettyServer.userCount.incrementAndGet();
+            System.out.println(new Date() + ": [" + userName + "]注册成功！");
         } else {
             registerResponsePacket.setSuccess(false);
             registerResponsePacket.setReason("用户名已存在！");
-            System.out.println(new Date() + ": 注册失败！");
+            String userName = registerResponsePacket.getUserName();
+            System.out.println(new Date() + ": [" + userName + "]注册失败！");
         }
         ctx.writeAndFlush(registerResponsePacket);
     }
 
-    private boolean successRegisterd(RegisterRequestPacket registerRequestPacket, RegisterResponsePacket registerResponsePacket) {
+    private boolean successRegister(RegisterRequestPacket registerRequestPacket, RegisterResponsePacket registerResponsePacket) {
 
         String name = registerRequestPacket.getUserName();
         String pwd = registerRequestPacket.getPassword();
+        registerResponsePacket.setUserName(name);
+
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             // 先查询用户名是否存在
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE name = ?")) {
@@ -61,13 +65,14 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
                     }
                 }
             }
-            // 再进行插入操作
+            // 不存在的话再进行插入操作
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO users (name, pwd) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 ps.setObject(1, name);
                 ps.setObject(2, pwd);
-                int n = ps.executeUpdate();
+                ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
+                        // userId将用于bindSession
                         registerResponsePacket.setUserId(rs.getLong(1) + "");
                         return true;
                     }

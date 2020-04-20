@@ -18,11 +18,11 @@ public class CreateGroupResponsePacket extends Packet {
 
     private String reason;
 
-    private String groupId;
+    private String userId;
 
-    private Session session;
+    private String userName;
 
-    private List<Session> sessionList;
+    private String groupName;
 
     @Override
     public Byte getCommand() {

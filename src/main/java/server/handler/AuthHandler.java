@@ -5,6 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import util.SessionUtil;
 
+import java.util.Date;
+
 /**
  * @author jmx
  * @date 2020/3/10 4:09 PM
@@ -38,7 +40,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     public void handlerRemoved(ChannelHandlerContext ctx) {
 
         if (SessionUtil.hasLogin(ctx.channel())) {
-            System.out.println("[" + SessionUtil.getSession(ctx.channel()).getUserName() + "]登录验证完毕，无需再次验证");
+            System.out.println(new Date() + "：[" + SessionUtil.getSession(ctx.channel()).getUserName() + "]登录验证完毕，无需再次验证");
         } else {
             System.out.println("无登录验证，强制关闭连接!");
         }

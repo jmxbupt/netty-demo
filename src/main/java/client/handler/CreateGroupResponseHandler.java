@@ -4,9 +4,7 @@ import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.CreateGroupResponsePacket;
-import session.Session;
 
-import java.util.List;
 
 /**
  * @author jmx
@@ -17,18 +15,19 @@ public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<Crea
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupResponsePacket createGroupResponsePacket) {
 
+        String groupName = createGroupResponsePacket.getGroupName();
+
         if (!createGroupResponsePacket.isSuccess()) {
-            System.out.println(createGroupResponsePacket.getReason());
+            String reason = createGroupResponsePacket.getReason();
+            System.out.println("群【" + groupName +  "】建立失败, 原因：" + reason);
         } else {
-            Session session = createGroupResponsePacket.getSession();
-            List<Session> sessionList = createGroupResponsePacket.getSessionList();
-            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
-                System.out.print("群[" + createGroupResponsePacket.getGroupId() + "]创建成功，");
+            String userId = createGroupResponsePacket.getUserId();
+            String userName = createGroupResponsePacket.getUserName();
+            if (ConsoleCommandManager.userId.equals(userId)) {
+                System.out.println("群【" + groupName +  "】建立成功！");
             } else {
-                System.out.print(session.getUserId() + ":" + session.getUserName()
-                        + " 创建了群[" + createGroupResponsePacket.getGroupId() + "]，");
+                System.out.println("[" + userId + ":" + userName + "]拉您进入群【" + groupName + "】");
             }
-            System.out.println("群成员有：" + sessionList);
         }
     }
 }
