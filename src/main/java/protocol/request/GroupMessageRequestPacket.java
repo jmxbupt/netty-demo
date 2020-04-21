@@ -15,7 +15,7 @@ public class GroupMessageRequestPacket extends Packet {
 
     private String groupId;
 
-    private String message;
+    private String content;
 
     @Override
     public Byte getCommand() {

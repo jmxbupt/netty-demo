@@ -31,8 +31,8 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
 
         Session session = SessionUtil.getSession(ctx.channel());
 
-        String user_id = session.getUserId();
-        String contact_id = contactAskRequestPacket.getContactId();
+        String userId = session.getUserId();
+        String contactId = contactAskRequestPacket.getContactId();
         String content = contactAskRequestPacket.getContent();
 
 
@@ -41,8 +41,8 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT id FROM contactAsks WHERE user_id = ? AND contact_id = ?")) {
-                ps.setObject(1, Long.valueOf(user_id));
-                ps.setObject(2, Long.valueOf(contact_id));
+                ps.setObject(1, Long.valueOf(userId));
+                ps.setObject(2, Long.valueOf(contactId));
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         System.out.println("之前请求过加好友，重新请求...");
@@ -58,8 +58,8 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
                         System.out.println("请求加好友...");
                         try (PreparedStatement ps1 = conn.prepareStatement(
                                 "INSERT INTO contactAsks (user_id, contact_id, ask_content) VALUES (?, ?, ?)")) {
-                            ps1.setObject(1, Long.valueOf(user_id));
-                            ps1.setObject(2, Long.valueOf(contact_id));
+                            ps1.setObject(1, Long.valueOf(userId));
+                            ps1.setObject(2, Long.valueOf(contactId));
                             ps1.setObject(3, content);
                             ps1.executeUpdate();
                         }
@@ -72,7 +72,7 @@ public class ContactAskRequestHandler extends SimpleChannelInboundHandler<Contac
         }
 
         // 暂时不考虑不在线的情况
-        Channel channel = SessionUtil.getChannel(contact_id);
+        Channel channel = SessionUtil.getChannel(contactId);
         if (channel != null && SessionUtil.hasLogin(channel)) {
             channel.writeAndFlush(new ContactAskResponsePacket());
         }

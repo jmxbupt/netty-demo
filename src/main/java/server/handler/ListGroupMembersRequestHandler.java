@@ -1,15 +1,11 @@
 package server.handler;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
 import protocol.request.ListGroupMembersRequestPacket;
 import protocol.response.ListGroupMembersResponsePacket;
-import session.Session;
 import util.JDBCUtil;
-import util.SessionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;

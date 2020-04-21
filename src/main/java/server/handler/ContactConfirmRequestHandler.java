@@ -33,25 +33,25 @@ public class ContactConfirmRequestHandler extends SimpleChannelInboundHandler<Co
 
         Session session = SessionUtil.getSession(ctx.channel());
 
-        String user_id = contactConfirmRequestPacket.getUserId();
-        String contact_id = session.getUserId();
+        String userId = contactConfirmRequestPacket.getUserId();
+        String contactId = session.getUserId();
 
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             // 更新contactAsks表
             try (PreparedStatement ps = conn.prepareStatement(
                     "UPDATE contactAsks SET valid = FALSE WHERE user_id = ? AND contact_id = ?")) {
-                ps.setObject(1, Long.valueOf(user_id));
-                ps.setObject(2, Long.valueOf(contact_id));
+                ps.setObject(1, Long.valueOf(userId));
+                ps.setObject(2, Long.valueOf(contactId));
                 ps.executeUpdate();
             }
             // 在contacts表中插入两条记录
             try (PreparedStatement ps = conn.prepareStatement(
                     "INSERT INTO contacts (user_id, contact_id) VALUES (?, ?), (?, ?)")) {
-                ps.setObject(1, Long.valueOf(user_id));
-                ps.setObject(2, Long.valueOf(contact_id));
+                ps.setObject(1, Long.valueOf(userId));
+                ps.setObject(2, Long.valueOf(contactId));
 
-                ps.setObject(3, Long.valueOf(contact_id));
-                ps.setObject(4, Long.valueOf(user_id));
+                ps.setObject(3, Long.valueOf(contactId));
+                ps.setObject(4, Long.valueOf(userId));
 
                 ps.executeUpdate();
             }
@@ -63,7 +63,7 @@ public class ContactConfirmRequestHandler extends SimpleChannelInboundHandler<Co
         // 给确认方发响应
         ctx.writeAndFlush(contactConfirmResponsePacket);
         // 给请求方发响应
-        Channel channel = SessionUtil.getChannel(user_id);
+        Channel channel = SessionUtil.getChannel(userId);
         if (channel != null && SessionUtil.hasLogin(channel)) {
             channel.writeAndFlush(contactConfirmResponsePacket);
         }

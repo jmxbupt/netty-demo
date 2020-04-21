@@ -39,10 +39,10 @@ public class CountUserHandler extends ChannelInboundHandlerAdapter {
 
         if (SessionUtil.hasLogin(ctx.channel())) {
             // 先更新数据库中用户在线状态
-            String id = SessionUtil.getSession(ctx.channel()).getUserId();
+            String userId = SessionUtil.getSession(ctx.channel()).getUserId();
             try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
                 try (PreparedStatement ps = conn.prepareStatement("UPDATE users SET online = FALSE WHERE id = ?")) {
-                    ps.setObject(1, Long.valueOf(id));
+                    ps.setObject(1, Long.valueOf(userId));
                     ps.executeUpdate();
                 }
             } catch (SQLException e) {

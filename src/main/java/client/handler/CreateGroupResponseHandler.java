@@ -23,10 +23,11 @@ public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<Crea
         } else {
             String userId = createGroupResponsePacket.getUserId();
             String userName = createGroupResponsePacket.getUserName();
+            String groupId = createGroupResponsePacket.getGroupId();
             if (ConsoleCommandManager.userId.equals(userId)) {
-                System.out.println("群【" + groupName +  "】建立成功！");
+                System.out.println("群【" + groupId + ":" + groupName +  "】建立成功！");
             } else {
-                System.out.println("[" + userId + ":" + userName + "]拉您进入群【" + groupName + "】");
+                System.out.println("[" + userId + ":" + userName + "]拉您进入群【" + groupId + ":" + groupName + "】");
             }
         }
     }

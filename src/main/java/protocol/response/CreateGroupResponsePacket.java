@@ -22,6 +22,8 @@ public class CreateGroupResponsePacket extends Packet {
 
     private String userName;
 
+    private String groupId;
+
     private String groupName;
 
     @Override

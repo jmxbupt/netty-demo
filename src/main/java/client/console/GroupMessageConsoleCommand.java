@@ -14,13 +14,16 @@ public class GroupMessageConsoleCommand implements ConsoleCommand {
     @Override
     public void exec(Scanner scanner, Channel channel) {
 
-        System.out.println("输入groupId + 空格 + message，在群中发送消息: ");
+        System.out.print("输入群Id：");
         String groupId = scanner.next();
-        String message = scanner.nextLine();
+        // 忽略输入流中的回车
+        scanner.nextLine();
+        System.out.print("输入要发送的消息：");
+        String content = scanner.nextLine();
 
         GroupMessageRequestPacket groupMessageRequestPacket = new GroupMessageRequestPacket();
         groupMessageRequestPacket.setGroupId(groupId);
-        groupMessageRequestPacket.setMessage(message);
+        groupMessageRequestPacket.setContent(content);
         channel.writeAndFlush(groupMessageRequestPacket);
     }
 }

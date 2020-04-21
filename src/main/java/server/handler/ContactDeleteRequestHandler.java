@@ -32,16 +32,16 @@ public class ContactDeleteRequestHandler extends SimpleChannelInboundHandler<Con
 
         Session session = SessionUtil.getSession(ctx.channel());
 
-        String user_id = session.getUserId();
-        String contact_id = contactDeleteRequestPacket.getContactId();
+        String userId = session.getUserId();
+        String contactId = contactDeleteRequestPacket.getContactId();
 
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             try (PreparedStatement ps = conn.prepareStatement(
                     "DELETE FROM contacts WHERE user_id = ? AND contact_id = ? OR user_id = ? AND contact_id = ? ")) {
-                ps.setObject(1, Long.valueOf(user_id));
-                ps.setObject(2, Long.valueOf(contact_id));
-                ps.setObject(3, Long.valueOf(contact_id));
-                ps.setObject(4, Long.valueOf(user_id));
+                ps.setObject(1, Long.valueOf(userId));
+                ps.setObject(2, Long.valueOf(contactId));
+                ps.setObject(3, Long.valueOf(contactId));
+                ps.setObject(4, Long.valueOf(userId));
                 ps.executeUpdate();
             }
         } catch (SQLException e) {

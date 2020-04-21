@@ -39,7 +39,7 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
             String userName = registerResponsePacket.getUserName();
             SessionUtil.bindSession(new Session(userId, userName), ctx.channel());
             NettyServer.userCount.incrementAndGet();
-            System.out.println(new Date() + ": [" + userName + "]注册成功！");
+            System.out.println(new Date() + ": [" + userId + ":" + userName + "]注册成功！");
         } else {
             registerResponsePacket.setSuccess(false);
             registerResponsePacket.setReason("用户名已存在！");
@@ -51,14 +51,14 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
 
     private boolean successRegister(RegisterRequestPacket registerRequestPacket, RegisterResponsePacket registerResponsePacket) {
 
-        String name = registerRequestPacket.getUserName();
-        String pwd = registerRequestPacket.getPassword();
-        registerResponsePacket.setUserName(name);
+        String userName = registerRequestPacket.getUserName();
+        String password = registerRequestPacket.getPassword();
+        registerResponsePacket.setUserName(userName);
 
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             // 先查询用户名是否存在
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE name = ?")) {
-                ps.setObject(1, name);
+                ps.setObject(1, userName);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         return false;
@@ -67,8 +67,8 @@ public class RegisterRequestHandler extends SimpleChannelInboundHandler<Register
             }
             // 不存在的话再进行插入操作
             try (PreparedStatement ps = conn.prepareStatement("INSERT INTO users (name, pwd) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-                ps.setObject(1, name);
-                ps.setObject(2, pwd);
+                ps.setObject(1, userName);
+                ps.setObject(2, password);
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {

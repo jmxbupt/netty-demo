@@ -4,17 +4,13 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
 import protocol.request.CreateGroupRequestPacket;
 import protocol.response.CreateGroupResponsePacket;
 import session.Session;
-import util.IDUtil;
 import util.JDBCUtil;
 import util.SessionUtil;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +51,9 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
                     channel.writeAndFlush(createGroupResponsePacket);
                 }
             }
-            System.out.println(new Date() + "：群【" + createGroupRequestPacket.getGroupName() +  "】建立成功！");
+            String groupId = createGroupResponsePacket.getGroupId();
+            String groupName = createGroupResponsePacket.getGroupName();
+            System.out.println(new Date() + "：群【" + groupId + ":" + groupName +  "】建立成功！");
         } else {
             createGroupResponsePacket.setSuccess(false);
             createGroupResponsePacket.setReason("群名已存在！");
@@ -90,12 +88,13 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
                 ps.executeUpdate();
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
-                        long group_id = rs.getLong(1);
+                        String groupId = rs.getLong(1) + "";
+                        createGroupResponsePacket.setGroupId(groupId);
                         // 在群成员表中插入若干条记录
                         for (String contactId : contactIds) {
                             try (PreparedStatement ps1 = conn.prepareStatement(
                                     "INSERT INTO group2user (group_id, user_id) VALUES (?, ?)")) {
-                                ps1.setObject(1, group_id);
+                                ps1.setObject(1, Long.valueOf(groupId));
                                 ps1.setObject(2, Long.valueOf(contactId));
                                 ps1.executeUpdate();
                             }

@@ -36,19 +36,21 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         System.out.println(new Date() + "：收到客户端登录请求...");
 
         LoginResponsePacket loginResponsePacket = new LoginResponsePacket();
-        loginResponsePacket.setUserName(loginRequestPacket.getUserName());
 
         if (valid(loginRequestPacket, loginResponsePacket)) {
             // 校验成功
             loginResponsePacket.setSuccess(true);
-            System.out.println(new Date() + "：[" + loginRequestPacket.getUserName() + "]登录成功！");
+            String userId = loginResponsePacket.getUserId();
+            String userName = loginResponsePacket.getUserName();
+            System.out.println(new Date() + "：[" + userId + ":" + userName + "]登录成功！");
             SessionUtil.bindSession(new Session(loginResponsePacket.getUserId(), loginRequestPacket.getUserName()), ctx.channel());
             NettyServer.userCount.incrementAndGet();
         } else {
             // 校验失败
             loginResponsePacket.setSuccess(false);
             loginResponsePacket.setReason("账号密码校验失败");
-            System.out.println(new Date() + "：[" + loginRequestPacket.getUserName() + "]登录失败！");
+            String userName = loginResponsePacket.getUserName();
+            System.out.println(new Date() + "：[" + userName + "]登录失败！");
         }
 
         ctx.writeAndFlush(loginResponsePacket);
@@ -56,12 +58,14 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
     private boolean valid(LoginRequestPacket loginRequestPacket, LoginResponsePacket loginResponsePacket) {
 
-        String name = loginRequestPacket.getUserName();
-        String pwd = loginRequestPacket.getPassword();
+        String userName = loginRequestPacket.getUserName();
+        String password = loginRequestPacket.getPassword();
+        loginResponsePacket.setUserName(loginRequestPacket.getUserName());
+
         try (Connection conn = DriverManager.getConnection(JDBCUtil.JDBC_URL, JDBCUtil.JDBC_USER, JDBCUtil.JDBC_PASSWORD)) {
             try (PreparedStatement ps = conn.prepareStatement("SELECT id FROM users WHERE name = ? AND pwd = ?")) {
-                ps.setObject(1, name);
-                ps.setObject(2, pwd);
+                ps.setObject(1, userName);
+                ps.setObject(2, password);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         long id = rs.getLong("id");
@@ -80,10 +84,5 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             e.printStackTrace();
         }
         return false;
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        SessionUtil.unBindSession(ctx.channel());
     }
 }

@@ -4,7 +4,8 @@ import client.console.ConsoleCommandManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.response.GroupMessageResponsePacket;
-import session.Session;
+
+import java.util.Date;
 
 /**
  * @author jmx
@@ -14,16 +15,18 @@ public class GroupMessageResponseHandler extends SimpleChannelInboundHandler<Gro
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupMessageResponsePacket groupMessageResponsePacket) {
 
-        if (!groupMessageResponsePacket.isSuccess()) {
-            System.out.println(groupMessageResponsePacket.getReason());
+        String userId = groupMessageResponsePacket.getUserId();
+        String userName = groupMessageResponsePacket.getUserName();
+        String groupId = groupMessageResponsePacket.getGroupId();
+        String groupName = groupMessageResponsePacket.getGroupName();
+        String content = groupMessageResponsePacket.getContent();
+
+        if (ConsoleCommandManager.userId.equals(userId)) {
+            System.out.println(new Date());
+            System.out.println("您在群【" + groupId + ":" + groupName + "】中发送了消息：" + content);
         } else {
-            Session session = groupMessageResponsePacket.getFromUser();
-            if (ConsoleCommandManager.userId.equals(session.getUserId())) {
-                System.out.println("群消息发送成功！");
-            } else {
-                System.out.println("收到群[" + groupMessageResponsePacket.getFromGroupId() + "]中["
-                        + session + "]发来的消息：" + groupMessageResponsePacket.getMessage());
-            }
+            System.out.println(new Date());
+            System.out.println("收到群【" + groupId + ":" + groupName + "】中的[" + userId + ":" + userName + "]发送的消息：" + content);
         }
     }
 }

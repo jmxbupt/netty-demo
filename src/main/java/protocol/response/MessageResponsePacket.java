@@ -16,6 +16,10 @@ public class MessageResponsePacket extends Packet {
 
     private String userName;
 
+    private String contactId;
+
+    private String contactName;
+
     private String content;
 
     @Override

@@ -13,15 +13,15 @@ import session.Session;
 @Data
 public class GroupMessageResponsePacket extends Packet {
 
-    private boolean success;
+    private String userId;
 
-    private String reason;
+    private String userName;
 
-    private String fromGroupId;
+    private String groupId;
 
-    private Session fromUser;
+    private String groupName;
 
-    private String message;
+    private String content;
 
     @Override
     public Byte getCommand() {

@@ -5,7 +5,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.ListContactsRequestPacket;
 import protocol.response.ListContactsResponsePacket;
-import session.Session;
 import util.JDBCUtil;
 import util.SessionUtil;
 
@@ -29,7 +28,7 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListContactsRequestPacket listContactsRequestPacket) {
 
-        String user_id = SessionUtil.getSession(ctx.channel()).getUserId();
+        String userId = SessionUtil.getSession(ctx.channel()).getUserId();
         ListContactsResponsePacket listContactsResponsePacket = new ListContactsResponsePacket();
 
         List<String> contactAsks = new ArrayList<>();
@@ -44,13 +43,13 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
                             "INNER JOIN users u " +
                             "ON c.user_id = u.id " +
                             "WHERE c.contact_id = ? AND valid = TRUE")) {
-                ps.setObject(1, user_id);
+                ps.setObject(1, Long.valueOf(userId));
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        String userId = rs.getLong("user_id") + "";
+                        String userId1 = rs.getLong("user_id") + "";
+                        String userName1 = rs.getString("name");
                         String content = rs.getString("ask_content");
-                        String name = rs.getString("name");
-                        contactAsks.add("[" + userId + ":" + name + "]发出的加好友请求：" + content);
+                        contactAsks.add("[" + userId1 + ":" + userName1 + "]发出的加好友请求：" + content);
                     }
                 }
             }
@@ -61,17 +60,16 @@ public class ListContactsRequestHandler extends SimpleChannelInboundHandler<List
                             "INNER JOIN users u " +
                             "ON c.contact_id = u.id " +
                             "WHERE c.user_id = ?")) {
-                ps.setObject(1, user_id);
+                ps.setObject(1, Long.valueOf(userId));
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        System.out.println();
                         String contactId = rs.getLong("contact_id") + "";
-                        String name = rs.getString("name");
+                        String contactName = rs.getString("name");
                         boolean online = rs.getBoolean("online");
                         if (online) {
-                            onlineContacts.add("[" + contactId + ":" + name + "]");
+                            onlineContacts.add("[" + contactId + ":" + contactName + "]");
                         } else {
-                            offlineContacts.add("[" + contactId + ":" + name + "]");
+                            offlineContacts.add("[" + contactId + ":" + contactName + "]");
                         }
                     }
                 }
